@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>周易入门 · 学习周易</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f0e8;--bg-dark:#2c2c2c;--text:#3d3d3d;--text-light:#666;--accent:#8b4513;--accent-light:#a0522d;--gold:#c9a959;--border:#d4c5a9}
+body{font-family:"Noto Serif SC","Source Han Serif SC","SimSun",serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
+nav{background:var(--bg-dark);padding:1rem 2rem;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.15)}
+nav ul{list-style:none;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
+nav a{color:var(--gold);text-decoration:none;font-size:1rem;transition:color 0.3s;padding:0.3rem 0.8rem;border-radius:4px}
+nav a:hover,nav a.active{color:#fff;background:rgba(201,169,89,0.2)}
+.container{max-width:1000px;margin:0 auto;padding:2rem}
+h1{font-size:2.4rem;text-align:center;color:var(--accent);margin-bottom:1rem;letter-spacing:0.2em}
+h2{font-size:1.6rem;color:var(--accent);border-left:4px solid var(--gold);padding-left:1rem;margin:2.5rem 0 1.2rem}
+h3{font-size:1.2rem;color:var(--accent-light);margin:1.5rem 0 0.8rem}
+p{margin-bottom:1rem;text-align:justify}
+section{display:none;animation:fadeIn 0.4s ease}
+section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.yin-yang-symbol{width:180px;height:180px;margin:2rem auto}
+.yin-yang-symbol svg{width:100%;height:100%}
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:1.5rem 0}
+.concept-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:transform 0.3s,box-shadow 0.3s}
+.concept-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,0.1)}
+.concept-card h4{color:var(--accent);font-size:1.1rem;margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px dashed var(--border)}
+.bagua-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
+.bagua-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;cursor:pointer;transition:all 0.3s}
+.bagua-card:hover{background:var(--accent);color:#fff;transform:scale(1.05)}
+.bagua-card .symbol{font-size:2.2rem;font-family:monospace;margin-bottom:0.5rem;letter-spacing:0.3em}
+.bagua-card .name{font-size:1.1rem;font-weight:bold}
+.bagua-card .meaning{font-size:0.85rem;color:var(--text-light);margin-top:0.3rem}
+.bagua-card:hover .meaning{color:rgba(255,255,255,0.8)}
+.hexagram-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.8rem;margin:1.5rem 0}
+.hexagram-item{background:#fff;border:1px solid var(--border);border-radius:6px;padding:0.8rem;text-align:center;cursor:pointer;transition:all 0.3s;font-size:0.9rem}
+.hexagram-item:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.hexagram-item .num{font-size:0.75rem;color:var(--text-light);margin-bottom:0.2rem}
+.hexagram-item:hover .num{color:rgba(255,255,255,0.7)}
+.hexagram-item .name{font-size:1.1rem;font-weight:bold}
+.hexagram-item .gua{font-family:monospace;font-size:0.85rem;letter-spacing:0.2em;margin-top:0.3rem}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;justify-content:center;align-items:center;padding:1rem}
+.modal-overlay.active{display:flex}
+.modal{background:var(--bg);border-radius:12px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:2rem;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)}
+.modal-close:hover{color:var(--accent)}
+.modal h2{border-left:none;padding-left:0;margin-top:0}
+.modal .gua-display{text-align:center;font-family:monospace;font-size:1.8rem;letter-spacing:0.4em;background:var(--bg-dark);color:var(--gold);padding:1rem;border-radius:8px;margin:1rem 0}
+.casting-area{background:#fff;border:2px dashed var(--border);border-radius:12px;padding:2rem;text-align:center;margin:2rem 0}
+.casting-area h3{margin-top:0}
+.coin-result{display:flex;justify-content:center;gap:1rem;margin:1.5rem 0;font-size:2rem}
+.coin{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.2rem;border:3px solid var(--accent)}
+.coin.yang{background:#fff;color:var(--accent)}
+.coin.yin{background:var(--accent);color:#fff}
+.btn{background:var(--accent);color:#fff;border:none;padding:0.8rem 2rem;font-size:1rem;border-radius:6px;cursor:pointer;transition:background 0.3s,transform 0.2s;font-family:inherit}
+.btn:hover{background:var(--accent-light);transform:scale(1.03)}
+.btn:active{transform:scale(0.98)}
+.casting-result{margin-top:1.5rem;padding:1.5rem;background:var(--bg-dark);color:var(--gold);border-radius:8px;display:none}
+.casting-result.active{display:block}
+.casting-result .gua-lines{font-family:monospace;font-size:1.5rem;letter-spacing:0.3em;margin:1rem 0}
+.about-content{background:#fff;border:1px solid var(--border);border-radius:8px;padding:2rem}
+footer{text-align:center;padding:2rem;color:var(--text-light);font-size:0.85rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:600px){h1{font-size:1.8rem}.container{padding:1rem}.bagua-grid{grid-template-columns:repeat(2,1fr)}.hexagram-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}}
+</style>
+</head>
+<body>
+<nav>
+<ul>
+<li><a href="#" class="active" data-section="home">首页</a></li>
+<li><a href="#" data-section="basics">基础概念</a></li>
+<li><a href="#" data-section="bagua">八卦</a></li>
+<li><a href="#" data-section="hexagrams">六十四卦</a></li>
+<li><a href="#" data-section="casting">占卜</a></li>
+<li><a href="#" data-section="about">关于</a></li>
+</ul>
+</nav>
+
+<section id="home" class="active">
+<div class="container">
+<h1>周 易 入 门</h1>
+<div class="yin-yang-symbol">
+<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#2c2c2c" stroke="#c9a959" stroke-width="2"/><path d="M50,2 A48,48 0 0,1 50,98 A24,24 0 0,1 50,50 A24,24 0 0,0 50,2" fill="#f5f0e8"/><circle cx="50" cy="26" r="6" fill="#2c2c2c"/><circle cx="50" cy="74" r="6" fill="#f5f0e8"/></svg>
+</div>
+<p style="text-align:center;font-size:1.1rem;color:var(--text-light);">「易者，变易也，穷则变，变则通，通则久。」<br>—— 《周易·系辞》</p>
+<div style="text-align:center;margin-top:2rem;">
+<button class="btn" onclick="switchSection('basics')">开始学习</button>
+</div>
+</div>
+</section>
+
+<section id="basics">
+<div class="container">
+<h2>阴阳之道</h2>
+<p>阴阳是周易最核心的哲学概念。世间万物皆有阴阳两面：<strong>阳</strong>代表积极、光明、刚强、动、上、外；<strong>阴</strong>代表消极、黑暗、柔弱、静、下、内。二者既对立又统一，相互转化，此消彼长。</p>
+<div class="concept-grid">
+<div class="concept-card"><h4>☀️ 阳的特性</h4><ul style="list-style:none;padding-left:0;"><li>· 明亮、温暖、向上</li><li>· 刚健、运动、开放</li><li>· 天、男、日、火</li></ul></div>
+<div class="concept-card"><h4>🌙 阴的特性</h4><ul style="list-style:none;padding-left:0;"><li>· 暗淡、寒冷、向下</li><li>· 柔顺、安静、闭合</li><li>· 地、女、月、水</li></ul></div>
+</div>
+<h2>五行学说</h2>
+<p>五行是古代中国人对世界基本物质及其运动规律的认识，包括<strong>木、火、土、金、水</strong>五种元素。五行之间存在相生相克的关系：</p>
+<div class="concept-grid">
+<div class="concept-card"><h4>相生</h4><p>木生火 → 火生土 → 土生金 → 金生水 → 水生木</p></div>
+<div class="concept-card"><h4>相克</h4><p>木克土 → 土克水 → 水克火 → 火克金 → 金克木</p></div>
+</div>
+<h2>基本符号</h2>
+<div class="concept-grid">
+<div class="concept-card" style="text-align:center;"><h4>阳爻</h4><div style="font-family:monospace;font-size:2.5rem;margin:1rem 0;letter-spacing:0.2em;">—</div><p>连续不断，代表阳、刚健、积极</p></div>
+<div class="concept-card" style="text-align:center;"><h4>阴爻</h4><div style="font-family:monospace;font-size:2.5rem;margin:1rem 0;letter-spacing:0.2em;">&ndash;</div><p>中间断开，代表阴、柔顺、消极</p></div>
+</div>
+</div>
+</section>
+
+<section id="bagua">
+<div class="container">
+<h2>八卦</h2>
+<p>八卦是周易的基础符号，由三个阴阳爻组成。八个卦象各有其象征意义：</p>
+<div class="bagua-grid">
+<div class="bagua-card" onclick="showBaguaDetail('乾','☰','天，健也。君子以自强不息。')"><div class="symbol">☰</div><div class="name">乾</div><div class="meaning">天 · 父</div></div>
+<div class="bagua-card" onclick="showBaguaDetail('坤','☷','地，顺也。君子以厚德载物。')"><div class="symbol">☷</div><div class="name">坤</div><div class="meaning">地 · 母</div></div>
+<div class="bagua-card" onclick="showBaguaDetail('震','☳','雷，震也。君子以恐惧修省。')"><div class="symbol">☳</div><div class="name">震</div><div class="meaning">雷 · 长男</div></div>
+<div class="bagua-card" onclick="showBaguaDetail('巽','☴','风，入也。君子以申命行事。')"><div class="symbol">☴</div><div class="name">巽</div><div class="meaning">风 · 长女</div></div>
+<div class="bagua-card" onclick="showBaguaDetail('坎','☵','水，陷也。君子以常德行，习教事。')"><div class="symbol">☵</div><div class="name">坎</div><div class="meaning">水 · 中男</div></div>
+<div class="bagua-card" onclick="showBaguaDetail('离','☲','火，丽也。君子以继明照于四方。')"><div class="symbol">☲</div><div class="name">离</div><div class="meaning">火 · 中女</div></div>
+<div class="bagua-card" onclick="showBaguaDetail('艮','☶','山，止也。君子以思不出其位。')"><div class="symbol">☶</div><div class="name">艮</div><div class="meaning">山 · 少男</div></div>
+<div class="bagua-card" onclick="showBaguaDetail('兑','☱','泽，说也。君子以朋友讲习。')"><div class="symbol">☱</div><div class="name">兑</div><div class="meaning">泽 · 少女</div></div>
+</div>
+<h3>八卦歌诀</h3>
+<div style="background:#fff;padding:1.5rem;border-radius:8px;border-left:3px solid var(--gold);">
+<p style="margin-bottom:0.5rem;"><strong>乾三连 ☰☰☰</strong>，<strong>坤六断 ☷☷☷</strong></p>
+<p style="margin-bottom:0.5rem;"><strong>震仰盂 ☳☳☳</strong>，<strong>艮覆碗 ☶☶☶</strong></p>
+<p style="margin-bottom:0.5rem;"><strong>离中虚 ☲☲☲</strong>，<strong>坎中满 ☵☵☵</strong></p>
+<p style="margin-bottom:0;"><strong>兑上缺 ☱☱☱</strong>，<strong>巽下断 ☴☴☴</strong></p>
+</div>
+</div>
+</section>
+
+<section id="hexagrams">
+<div class="container">
+<h2>六十四卦</h2>
+<p>六十四卦由两个八卦重叠组成，是周易占卜的核心工具。点击任意卦象查看详情：</p>
+<div class="hexagram-grid" id="hexagramGrid"></div>
+</div>
+</section>
+
+<section id="casting">
+<div class="container">
+<h2>硬币占卜法</h2>
+<p>这是最简便的起卦方法。用三枚硬币，摇六次即可得一卦。</p>
+<div class="casting-area">
+<h3>起卦步骤</h3>
+<ol style="text-align:left;max-width:400px;margin:0 auto 1.5rem;padding-left:1.5rem;">
+<li>心中默念所问之事</li>
+<li>将三枚硬币捧在手中摇动</li>
+<li>抛落后查看结果</li>
+<li>记录一次结果</li>
+<li>重复六次，从下往上记录</li>
+</ol>
+<h3>投掷结果换算</h3>
+<div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0;">
+<div><div class="coin yang">阳</div><p style="margin-top:0.5rem;">3正面=<strong>阳爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">老阳，变阴</span></p></div>
+<div><div class="coin yin">阴</div><p style="margin-top:0.5rem;">3背面=<strong>阴爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">老阴，变阳</span></p></div>
+<div><div style="width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid var(--accent);">正</div><p style="margin-top:0.5rem;">2正1背=<strong>阳爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">少阳，不变</span></p></div>
+<div><div style="width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid var(--accent);background:var(--accent);color:#fff;">背</div><p style="margin-top:0.5rem;">2背1正=<strong>阴爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">少阴，不变</span></p></div>
+</div>
+<button class="btn" onclick="startCasting()">开始占卜（模拟）</button>
+<div class="casting-result" id="castingResult">
+<p style="margin-bottom:0.5rem;">您的卦象：</p>
+<div class="gua-lines" id="guaLines"></div>
+<p style="margin-top:1rem;" id="castingSummary"></p>
+<button class="btn" style="margin-top:1rem;" onclick="resetCasting()">重新起卦</button>
+</div>
+</div>
+<h3>变爻说明</h3>
+<div style="background:#fff;padding:1.5rem;border-radius:8px;border:1px solid var(--border);">
+<p>☯ <strong>老阳（9）</strong> → 阳爻变阴爻，代表事物达到极点</p>
+<p>☯ <strong>老阴（6）</strong> → 阴爻变阳爻，代表阴气盛极将转</p>
+<p>☯ <strong>少阳（7）</strong> → 阳爻不变，表示稳步发展</p>
+<p>☯ <strong>少阴（8）</strong> → 阴爻不变，表示稳步发展</p>
+</div>
+</div>
+</section>
+
+<section id="about">
+<div class="container">
+<h2>关于周易</h2>
+<div class="about-content">
+<p><strong>《周易》</strong>，又称《易经》，是中国古代经典之一，相传由伏羲、周文王、周公旦等圣人创作。它以阴阳符号为基础，通过八卦和六十四卦来阐述天地人三才的变化规律。</p>
+<h3>核心思想</h3>
+<ul style="padding-left:1.5rem;">
+<li><strong>变易</strong>：世间万物皆在变化之中</li>
+<li><strong>不易</strong>：变化背后有永恒的规律</li>
+<li><strong>简易</strong>：复杂现象可用简单符号表示</li>
+</ul>
+<h3>应用领域</h3>
+<p>周易思想深刻影响了中国文化的方方面面：<strong>中医</strong>、<strong>风水</strong>、<strong>武术</strong>、<strong>书法</strong>、<strong>诗词</strong>、<strong>音乐</strong>、<strong>建筑</strong>……乃至现代的<strong>管理学</strong>和<strong>计算机科学</strong>。</p>
+<h3>学习建议</h3>
+<p>学习周易宜由浅入深：先理解阴阳五行，再熟记八卦含义，然后研读六十四卦卦辞。推荐入门书籍：《周易本义》（朱熹）、《周易译注》（黄寿祺）。</p>
+</div>
+</div>
+</section>
+
+<footer><p>周易入门学习 · 仅供文化参考 · 理性看待</p></footer>
+
+<div class="modal-overlay" id="modalOverlay">
+<div class="modal">
+<button class="modal-close" onclick="closeModal()">×</button>
+<h2 id="modalTitle"></h2>
+<p id="modalSymbol" style="text-align:center;font-size:1.3rem;"></p>
+<div class="gua-display" id="modalGua"></div>
+<p id="modalContent"></p>
+</div>
+</div>
+
+<script>
+const hexagrams=[
+{n:1,g:'䷀',name:'乾',meaning:'天行健，君子以自强不息。',desc:'纯阳之卦，代表天、刚健、第一。'},
+{n:2,g:'䷁',name:'坤',meaning:'地势坤，君子以厚德载物。',desc:'纯阴之卦，代表地、柔顺、第二。'},
+{n:3,g:'䷂',name:'屯',meaning:'云雷屯，君子以经纶。',desc:'水雷叠临，象征万物初生之艰难。'},
+{n:4,g:'䷃',name:'蒙',meaning:'山下出泉，蒙。君子以果行育德。',desc:'山水蒙，象征蒙昧幼稚，需启蒙教育。'},
+{n:5,g:'䷄',name:'需',meaning:'云上于天，需。君子以饮食宴乐。',desc:'水天需，象征等待时机。'},
+{n:6,g:'䷅',name:'讼',meaning:'天与水违行，讼。君子以作事谋始。',desc:'天水讼，象征争论、诉讼。'},
+{n:7,g:'䷆',name:'师',meaning:'地中有水，师。君子以容民畜众。',desc:'地水师，象征军队、众。'},
+{n:8,g:'䷇',name:'比',meaning:'地上有水，比。先王以建万国，亲诸侯。',desc:'水地比，象征亲附、团结。'},
+{n:9,g:'䷈',name:'小畜',meaning:'风行天上，小畜。君子以懿文德。',desc:'风天小畜，象征小有积蓄。'},
+{n:10,g:'䷉',name:'履',meaning:'上天下泽，履。君子以辨上下，定民志。',desc:'天泽履，象征谨慎行事。'},
+{n:11,g:'䷊',name:'泰',meaning:'天地交，泰。后以财成天地之道。',desc:'地天泰，象征通泰、平安。'},
+{n:12,g:'䷋',name:'否',meaning:'天地不交，否。君子以俭德辟难。',desc:'天地否，象征闭塞、困境。'},
+{n:13,g:'䷌',name:'同人',meaning:'天与火，同人。君子以类族辨物。',desc:'天火同人，象征志同道合。'},
+{n:14,g:'䷍',name:'大有',meaning:'火在天上，大有。君子以遏恶扬善。',desc:'火天大有，象征大获所有。'},
+{n:15,g:'䷎',name:'谦',meaning:'地中有山，谦。君子以裒多益寡。',desc:'地山谦，象征谦虚。'},
+{n:16,g:'䷏',name:'豫',meaning:'雷出地奋，豫。先王以作乐崇德。',desc:'雷地豫，象征喜悦。'},
+{n:17,g:'䷐',name:'随',meaning:'泽中有雷，随。君子以向晦入宴息。',desc:'泽雷随，象征随从、随和。'},
+{n:18,g:'䷑',name:'蛊',meaning:'山下有风，蛊。君子以振民育德。',desc:'山风蛊，象征除弊治乱。'},
+{n:19,g:'䷒',name:'临',meaning:'泽上有地，临。君子以教思无穷。',desc:'泽地临，象征临近、督导。'},
+{n:20,g:'䷓',name:'观',meaning:'风行地上，观。先王以省方观民设教。',desc:'风地观，象征观察、观摩。'},
+{n:21,g:'䷔',name:'噬嗑',meaning:'雷电噬嗑。先王以明罚敕法。',desc:'火雷噬嗑，象征刑法治世。'},
+{n:22,g:'䷕',name:'贲',meaning:'山下有火，贲。君子以明庶政。',desc:'山火贲，象征文饰。'},
+{n:23,g:'䷖',name:'剥',meaning:'山附于地，剥。上以厚下安宅。',desc:'山地剥，象征侵蚀、衰落。'},
+{n:24,g:'䷗',name:'复',meaning:'雷在地中，复。先王以至日闭关。',desc:'地雷复，象征复归、复兴。'},
+{n:25,g:'䷘',name:'无妄',meaning:'天下雷行，物与无妄。先王以茂对时。',desc:'天雷无妄，象征无妄、真实。'},
+{n:26,g:'䷙',name:'大畜',meaning:'天在山中，大畜。君子以多识前言往行。',desc:'山天大畜，象征大积蓄。'},
+{n:27,g:'䷚',name:'颐',meaning:'山下有雷，颐。君子以慎言语，节饮食。',desc:'山雷颐，象征颐养。'},
+{n:28,g:'䷛',name:'大过',meaning:'泽灭木，大过。君子以独立不惧。',desc:'泽风大过，象征大的过度。'},
+{n:29,g:'䷜',name:'坎',meaning:'水洊至，习坎。君子以常德行，习教事。',desc:'坎为水，象征险阻、重重困难。'},
+{n:30,g:'䷝',name:'离',meaning:'明两作，离。大人以继明照于四方。',desc:'离为火，象征光明、依附。'},
+{n:31,g:'䷞',name:'咸',meaning:'山上有泽，咸。君子以虚受人。',desc:'泽山咸，象征感应。'},
+{n:32,g:'䷟',name:'恒',meaning:'雷风恒。君子以立不易方。',desc:'雷风恒，象征恒久。'},
+{n:33,g:'䷠',name:'遁',meaning:'天下有山，遁。君子以远小人，不恶而严。',desc:'天山遁，象征退避、隐遁。'},
+{n:34,g:'䷡',name:'大壮',meaning:'雷在天上，大壮。君子以非礼勿履。',desc:'雷天大壮，象征壮大、强盛。'},
+{n:35,g:'䷢',name:'晋',meaning:'明出地上，晋。君子以自昭明德。',desc:'火地晋，象征晋升、前进。'},
+{n:36,g:'䷣',name:'明夷',meaning:'明入地中，明夷。君子以莅众，用晦而明。',desc:'地火明夷，象征受伤、晦暗。'},
+{n:37,g:'䷤',name:'家人',meaning:'风自火出，家人。君子以言有物而行有恒。',desc:'风火家人，象征家庭。'},
+{n:38,g:'䷥',name:'睽',meaning:'上火下泽，睽。君子以同而异。',desc:'火泽睽，象征乖离、对立。'},
+{n:39,g:'䷦',name:'蹇',meaning:'山上有水，蹇。君子以反身修德。',desc:'水山蹇，象征艰难、险阻。'},
+{n:40,g:'䷧',name:'解',meaning:'雷雨作，解。君子以赦过宥罪。',desc:'雷水解，象征解除、缓解。'},
+{n:41,g:'䷨',name:'损',meaning:'山下有泽，损。君子以惩忿窒欲。',desc:'山泽损，象征减损。'},
+{n:42,g:'䷩',name:'益',meaning:'风雷益。君子以见善则迁，有过则改。',desc:'风雷益，象征增益。'},
+{n:43,g:'䷪',name:'夬',meaning:'泽上于天，夬。君子以施禄及下。',desc:'泽天夬，象征决断。'},
+{n:44,g:'䷫',name:'姤',meaning:'天下有风，姤。后以施命诰四方。',desc:'天风姤，象征相遇。'},
+{n:45,g:'䷬',name:'萃',meaning:'泽上于地，萃。君子以除戎器，戒不虞。',desc:'泽地萃，象征聚集。'},
+{n:46,g:'䷭',name:'升',meaning:'地中生木，升。君子以顺德，积小以高大。',desc:'地风升，象征上升。'},
+{n:47,g:'䷮',name:'困',meaning:'泽无水，困。君子以致命遂志。',desc:'泽水困，象征困境。'},
+{n:48,g:'䷯',name:'井',meaning:'木上有水，井。君子以劳民劝相。',desc:'水风井，象征井养。'},
+{n:49,g:'䷰',name:'革',meaning:'泽中有火，革。君子以治历明时。',desc:'泽火革，象征变革。'},
+{n:50,g:'䷱',name:'鼎',meaning:'木上有火，鼎。君子以正位凝命。',desc:'火风鼎，象征重器、革新。'},
+{n:51,g:'䷲',name:'震',meaning:'洊雷，震。君子以恐惧修省。',desc:'震为雷，象征震动。'},
+{n:52,g:'䷳',name:'艮',meaning:'兼山，艮。君子以思不出其位。',desc:'艮为山，象征停止。'},
+{n:53,g:'䷴',name:'渐',meaning:'山上有木，渐。君子以居贤德，善俗。',desc:'风山渐，象征渐进。'},
+{n:54,g:'䷵',name:'归妹',meaning:'泽上有雷，归妹。君子以永终知敝。',desc:'雷泽归妹，象征归附。'},
+{n:55,g:'䷶',name:'丰',meaning:'雷电皆至，丰。君子以折狱致刑。',desc:'雷火丰，象征丰盛。'},
+{n:56,g:'䷷',name:'旅',meaning:'山上有火，旅。君子以明慎用刑。',desc:'火山旅，象征旅行。'},
+{n:57,g:'䷸',name:'巽',meaning:'随风，巽。君子以申命行事。',desc:'巽为风，象征顺从。'},
+{n:58,g:'䷹',name:'兑',meaning:'丽泽，兑。君子以朋友讲习。',desc:'兑为泽，象征喜悦。'},
+{n:59,g:'䷺',name:'涣',meaning:'风行水上，涣。先王以享于帝立庙。',desc:'风水涣，象征涣散。'},
+{n:60,g:'䷻',name:'节',meaning:'泽上有水，节。君子以制数度，议德行。',desc:'水泽节，象征节制。'},
+{n:61,g:'䷼',name:'中孚',meaning:'泽上有风，中孚。君子以议狱缓死。',desc:'风泽中孚，象征诚信。'},
+{n:62,g:'䷽',name:'小过',meaning:'山上有雷，小过。君子以行过乎恭，丧过乎哀。',desc:'雷山小过，象征小有过失。'},
+{n:63,g:'䷾',name:'既济',meaning:'水在火上，既济。君子以思患而豫防之。',desc:'水火既济，象征成功。'},
+{n:64,g:'䷿',name:'未济',meaning:'火在水上，未济。君子以慎辨物居方。',desc:'火水未济，象征未完成。'}
+];
+
+function switchSection(id){
+document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelector('nav a[data-section="'+id+'"]').classList.add('active');
+window.scrollTo(0,0);
+}
+document.querySelectorAll('nav a').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();switchSection(a.dataset.section)})});
+
+function showBaguaDetail(name,symbol,meaning){
+document.getElementById('modalTitle').textContent=name+'卦';
+document.getElementById('modalSymbol').textContent=symbol+' — '+name;
+document.getElementById('modalGua').textContent=symbol+' '+symbol+' '+symbol;
+document.getElementById('modalContent').textContent=meaning;
+document.getElementById('modalOverlay').classList.add('active');
+}
+
+function closeModal(){document.getElementById('modalOverlay').classList.remove('active');}
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))closeModal()});
+
+function renderHexagrams(){
+const grid=document.getElementById('hexagramGrid');
+grid.innerHTML='';
+hexagrams.forEach(h=>{
+const item=document.createElement('div');
+item.className='hexagram-item';
+item.innerHTML='<div class="num">第'+h.n+'卦</div><div class="name">'+h.name+'</div><div class="gua">'+h.g+'</div>';
+item.onclick=()=>showHexagramDetail(h);
+grid.appendChild(item);
+});
+}
+
+function showHexagramDetail(h){
+document.getElementById('modalTitle').textContent='第'+h.n+'卦 '+h.name;
+document.getElementById('modalSymbol').textContent=h.g;
+document.getElementById('modalGua').textContent=h.g+' '+h.g;
+document.getElementById('modalContent').innerHTML='<p style="margin-bottom:1rem;"><strong>卦辞：</strong>'+h.meaning+'</p><p><strong>解读：</strong>'+h.desc+'</p>';
+
+document.getElementById('modalOverlay').classList.add('active');
+}
+
+function startCasting(){
+const result=document.getElementById('castingResult');
+const lines=document.getElementById('guaLines');
+const summary=document.getElementById('castingSummary');
+result.classList.add('active');
+const yao=['��س','��س','��س','��س','��س','��س'];
+let html='';
+let changeCount=0;
+for(let i=0;i<6;i++){
+const rand=Math.random();
+let type,yang,line;
+if(rand<0.125){type='����';yang=true;line='��';changeCount++;}
+else if(rand<0.25){type='����';yang=false;line='--';changeCount++;}
+else if(rand<0.625){type='����';yang=true;line='��';}
+else{type='����';yang=false;line='--';}
+html+='<div>'+yao[i]+'��'+line+' '+type+'</div>';
+}
+lines.innerHTML=html;
+summary.innerHTML='��'+changeCount+'����س������ı��ԣ�����Ĳ��֣���֮�ԣ��仯��س����Խ����';
+}
+
+function resetCasting(){
+document.getElementById('castingResult').classList.remove('active');
+}
+
+renderHexagrams();
+</script>
+</body>
+</html>
