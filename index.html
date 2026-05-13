@@ -3,350 +3,657 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>周易入门 · 学习周易</title>
+<title>周易 · 学易</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#f5f0e8;--bg-dark:#2c2c2c;--text:#3d3d3d;--text-light:#666;--accent:#8b4513;--accent-light:#a0522d;--gold:#c9a959;--border:#d4c5a9}
-body{font-family:"Noto Serif SC","Source Han Serif SC","SimSun",serif;background:var(--bg);color:var(--text);line-height:1.8;min-height:100vh}
-nav{background:var(--bg-dark);padding:1rem 2rem;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,0.15)}
-nav ul{list-style:none;display:flex;gap:2rem;justify-content:center;flex-wrap:wrap}
-nav a{color:var(--gold);text-decoration:none;font-size:1rem;transition:color 0.3s;padding:0.3rem 0.8rem;border-radius:4px}
-nav a:hover,nav a.active{color:#fff;background:rgba(201,169,89,0.2)}
-.container{max-width:1000px;margin:0 auto;padding:2rem}
-h1{font-size:2.4rem;text-align:center;color:var(--accent);margin-bottom:1rem;letter-spacing:0.2em}
-h2{font-size:1.6rem;color:var(--accent);border-left:4px solid var(--gold);padding-left:1rem;margin:2.5rem 0 1.2rem}
-h3{font-size:1.2rem;color:var(--accent-light);margin:1.5rem 0 0.8rem}
-p{margin-bottom:1rem;text-align:justify}
-section{display:none;animation:fadeIn 0.4s ease}
+:root{--bg:#f5efe6;--bg-card:#fffcf8;--bg-dark:#1a1a2e;--bg-card-dark:#252545;--text:#2c2416;--text-light:#7a6b5a;--accent:#b8452a;--accent-light:#d4653a;--gold:#b8860b;--gold-light:#d4a843;--border:#d4c5a9;--shadow:rgba(0,0,0,0.06);--radius:12px;--font-title:'Ma Shan Zheng',cursive;--font-body:'Noto Serif SC','Source Han Serif SC','SimSun',serif}
+[data-theme=dark]{--bg:#12121e;--bg-card:#1e1e36;--text:#e8dcc8;--text-light:#9a8b7a;--accent:#e8744a;--accent-light:#ff8a5c;--border:#3a3050;--shadow:rgba(0,0,0,0.3);--gold:#d4a843}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);line-height:1.9;transition:background .3s,color .3s;min-height:100vh}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(18,18,30,0.92);backdrop-filter:blur(20px);padding:0 1.5rem;border-bottom:1px solid rgba(201,169,89,0.15)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{font-family:var(--font-title);font-size:1.4rem;color:var(--gold);text-decoration:none;letter-spacing:0.15em}
+.nav-links{display:flex;gap:0.2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:0.85rem;padding:0.4rem 0.7rem;border-radius:6px;transition:all .25s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(201,169,89,0.15)}
+.theme-toggle{background:none;border:1px solid rgba(255,255,255,0.2);color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .25s}
+.theme-toggle:hover{background:rgba(201,169,89,0.2);border-color:var(--gold)}
+
+/* Hamburger */
+.hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:6px}
+.hamburger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:all .3s}
+
+/* Sections */
+.container{max-width:1100px;margin:0 auto;padding:2rem;}
+section{padding-top:60px;display:none;animation:pageIn .45s ease}
 section.active{display:block}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.yin-yang-symbol{width:180px;height:180px;margin:2rem auto}
-.yin-yang-symbol svg{width:100%;height:100%}
-.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin:1.5rem 0}
-.concept-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:transform 0.3s,box-shadow 0.3s}
-.concept-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,0.1)}
-.concept-card h4{color:var(--accent);font-size:1.1rem;margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px dashed var(--border)}
-.bagua-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.5rem 0}
-.bagua-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center;cursor:pointer;transition:all 0.3s}
-.bagua-card:hover{background:var(--accent);color:#fff;transform:scale(1.05)}
-.bagua-card .symbol{font-size:2.2rem;font-family:monospace;margin-bottom:0.5rem;letter-spacing:0.3em}
-.bagua-card .name{font-size:1.1rem;font-weight:bold}
-.bagua-card .meaning{font-size:0.85rem;color:var(--text-light);margin-top:0.3rem}
-.bagua-card:hover .meaning{color:rgba(255,255,255,0.8)}
-.hexagram-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.8rem;margin:1.5rem 0}
-.hexagram-item{background:#fff;border:1px solid var(--border);border-radius:6px;padding:0.8rem;text-align:center;cursor:pointer;transition:all 0.3s;font-size:0.9rem}
-.hexagram-item:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
-.hexagram-item .num{font-size:0.75rem;color:var(--text-light);margin-bottom:0.2rem}
-.hexagram-item:hover .num{color:rgba(255,255,255,0.7)}
-.hexagram-item .name{font-size:1.1rem;font-weight:bold}
-.hexagram-item .gua{font-family:monospace;font-size:0.85rem;letter-spacing:0.2em;margin-top:0.3rem}
-.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:200;justify-content:center;align-items:center;padding:1rem}
+@keyframes pageIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* Hero */
+.hero{text-align:center;padding:4rem 0 3rem}
+.hero h1{font-family:var(--font-title);font-size:3.8rem;color:var(--accent);letter-spacing:0.2em;margin-bottom:0.5rem}
+.hero .subtitle{color:var(--text-light);font-size:1.05rem;max-width:500px;margin:1rem auto 2rem;line-height:1.7}
+
+/* Tai Chi */
+.taiji{width:160px;height:160px;margin:1.5rem auto;filter:drop-shadow(0 4px 20px rgba(0,0,0,0.1))}
+
+/* Section Header */
+.section-header{margin-bottom:2rem;text-align:center}
+.section-header h2{font-family:var(--font-title);font-size:2.2rem;color:var(--accent);letter-spacing:0.15em;margin-bottom:0.3rem}
+.section-header p{color:var(--text-light);font-size:0.95rem}
+
+/* Cards */
+.card-grid{display:grid;gap:1.5rem}
+.card-grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card-grid-4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:0 2px 12px var(--shadow);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px var(--shadow)}
+.card h4{color:var(--accent);font-size:1.05rem;margin-bottom:0.8rem;padding-bottom:0.5rem;border-bottom:1px dashed var(--border)}
+.card p{font-size:0.93rem;color:var(--text-light);line-height:1.7}
+
+/* Bagua */
+.bagua-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2rem 0}
+.bagua-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem 0.8rem;text-align:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.bagua-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .3s}
+.bagua-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px var(--shadow);border-color:var(--gold)}
+.bagua-card:hover::before{opacity:1}
+.bagua-card .symbol{font-size:2.4rem;margin-bottom:0.4rem;display:block}
+.bagua-card .name{font-size:1.15rem;font-weight:700;color:var(--accent)}
+.bagua-card .meaning{font-size:0.82rem;color:var(--text-light);margin-top:0.3rem}
+.bagua-card:hover .meaning{color:var(--gold)}
+
+/* Rhyme Box */
+.rhyme-box{background:var(--bg-card);border-radius:var(--radius);padding:1.5rem 2rem;border-left:3px solid var(--gold);margin:1.5rem 0}
+.rhyme-box p{font-size:0.95rem;margin-bottom:0.4rem}
+
+/* Hexagram Grid */
+.hex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:0.7rem;margin:1.5rem 0}
+.hex-item{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:0.6rem 0.4rem;text-align:center;cursor:pointer;transition:all .25s}
+.hex-item:hover{background:var(--accent);color:#fff;border-color:var(--accent);transform:translateY(-2px);box-shadow:0 4px 12px rgba(184,69,42,0.3)}
+.hex-item .num{font-size:0.7rem;opacity:0.6;margin-bottom:0.15rem}
+.hex-item .gname{font-size:1.05rem;font-weight:700}
+.hex-item .gsym{font-size:0.8rem;opacity:0.7;margin-top:0.15rem;letter-spacing:0.15em}
+.hex-item:hover .num,.hex-item:hover .gsym{color:rgba(255,255,255,0.7)}
+
+/* Search */
+.search-bar{display:flex;gap:0.5rem;margin-bottom:1.5rem;max-width:400px}
+.search-bar input{flex:1;padding:0.7rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text);font-family:inherit;font-size:0.9rem;outline:none;transition:border-color .3s}
+.search-bar input:focus{border-color:var(--gold)}
+.search-bar input::placeholder{color:var(--text-light);opacity:0.6}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:2000;justify-content:center;align-items:center;padding:1rem;backdrop-filter:blur(4px)}
 .modal-overlay.active{display:flex}
-.modal{background:var(--bg);border-radius:12px;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;padding:2rem;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
-.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)}
-.modal-close:hover{color:var(--accent)}
-.modal h2{border-left:none;padding-left:0;margin-top:0}
-.modal .gua-display{text-align:center;font-family:monospace;font-size:1.8rem;letter-spacing:0.4em;background:var(--bg-dark);color:var(--gold);padding:1rem;border-radius:8px;margin:1rem 0}
-.casting-area{background:#fff;border:2px dashed var(--border);border-radius:12px;padding:2rem;text-align:center;margin:2rem 0}
-.casting-area h3{margin-top:0}
-.coin-result{display:flex;justify-content:center;gap:1rem;margin:1.5rem 0;font-size:2rem}
-.coin{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:1.2rem;border:3px solid var(--accent)}
-.coin.yang{background:#fff;color:var(--accent)}
-.coin.yin{background:var(--accent);color:#fff}
-.btn{background:var(--accent);color:#fff;border:none;padding:0.8rem 2rem;font-size:1rem;border-radius:6px;cursor:pointer;transition:background 0.3s,transform 0.2s;font-family:inherit}
-.btn:hover{background:var(--accent-light);transform:scale(1.03)}
-.btn:active{transform:scale(0.98)}
-.casting-result{margin-top:1.5rem;padding:1.5rem;background:var(--bg-dark);color:var(--gold);border-radius:8px;display:none}
-.casting-result.active{display:block}
-.casting-result .gua-lines{font-family:monospace;font-size:1.5rem;letter-spacing:0.3em;margin:1rem 0}
-.about-content{background:#fff;border:1px solid var(--border);border-radius:8px;padding:2rem}
-footer{text-align:center;padding:2rem;color:var(--text-light);font-size:0.85rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:600px){h1{font-size:1.8rem}.container{padding:1rem}.bagua-grid{grid-template-columns:repeat(2,1fr)}.hexagram-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}}
+.modal{background:var(--bg);border-radius:var(--radius);max-width:620px;width:100%;max-height:88vh;overflow-y:auto;padding:2rem;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.3);animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light);transition:color .25s;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{color:var(--accent);background:rgba(184,69,42,0.1)}
+.modal h2{font-family:var(--font-title);font-size:1.8rem;color:var(--accent);letter-spacing:0.1em;padding-right:2rem}
+.modal .gua-big{text-align:center;font-size:3rem;letter-spacing:0.3em;background:var(--bg-card);padding:1rem;border-radius:8px;margin:1rem 0;border:1px solid var(--border)}
+.modal .trigram-info{text-align:center;color:var(--text-light);font-size:0.9rem;margin-bottom:1rem}
+.modal-tabs{display:flex;gap:0;margin:1rem 0;border-bottom:1px solid var(--border)}
+.modal-tab{padding:0.5rem 1rem;cursor:pointer;border:none;background:none;font-family:inherit;font-size:0.88rem;color:var(--text-light);transition:all .25s;border-bottom:2px solid transparent}
+.modal-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.modal-tab:hover{color:var(--accent)}
+.modal-body{line-height:1.8;font-size:0.93rem}
+.modal-body p{margin-bottom:0.8rem}
+.modal-body .yao-item{padding:0.5rem 0.8rem;margin:0.3rem 0;border-radius:6px;background:var(--bg-card);border-left:3px solid var(--border);font-size:0.9rem}
+.modal-body .yao-item .yao-label{font-weight:600;color:var(--accent);margin-right:0.5rem}
+
+/* Casting */
+.casting-area{background:var(--bg-card);border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;margin:2rem 0}
+.casting-area h3{margin-top:0;font-family:var(--font-title);font-size:1.6rem;color:var(--accent)}
+.casting-step{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.coin-icon{width:56px;height:56px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;border:3px solid var(--accent);margin:0 0.3rem;transition:transform .3s}
+.coin-icon.yang{background:#fff;color:var(--accent);border-color:var(--gold)}
+.coin-icon.yin{background:var(--accent);color:#fff}
+.coin-icon.old-yang{background:var(--gold);color:#fff;border-color:var(--gold);animation:pulse 1.5s infinite}
+.coin-icon.old-yin{background:#2c2c2c;color:var(--gold);border-color:var(--gold);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+.btn{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;border:none;padding:0.8rem 2rem;font-size:0.95rem;border-radius:8px;cursor:pointer;transition:all .3s;font-family:inherit;text-decoration:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(184,69,42,0.35)}
+.btn:active{transform:scale(0.97)}
+.btn-outline{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.btn-outline:hover{background:var(--accent);color:#fff;box-shadow:none}
+.btn-sm{padding:0.5rem 1.2rem;font-size:0.85rem}
+
+/* Casting Result */
+.cast-result{margin-top:1.5rem;display:none}
+.cast-result.active{display:block}
+.cast-result-inner{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.cast-lines{display:flex;flex-direction:column;align-items:center;gap:0.3rem;margin:1rem 0;font-size:1.6rem;letter-spacing:0.2em}
+.cast-lines .line{display:flex;align-items:center;gap:0.8rem}
+.cast-lines .line .idx{font-size:0.7rem;color:var(--text-light);width:2rem;text-align:right}
+.cast-lines .line .yao{font-family:monospace;font-size:1.8rem;min-width:3rem;text-align:center}
+.cast-lines .line .type-tag{font-size:0.7rem;padding:0.15rem 0.4rem;border-radius:4px;background:var(--border);color:var(--text-light)}
+.cast-lines .line .type-tag.changing{background:var(--gold);color:#fff}
+.cast-identify{margin:1rem 0;padding:1rem;background:var(--bg);border-radius:8px;border-left:3px solid var(--gold)}
+.cast-identify h4{color:var(--accent);margin-bottom:0.5rem}
+
+/* Footer */
+footer{text-align:center;padding:3rem 1rem;color:var(--text-light);font-size:0.82rem;border-top:1px solid var(--border);margin-top:3rem}
+
+/* About */
+.about-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem}
+
+/* Responsive */
+@media(max-width:768px){
+  .hamburger{display:flex}
+  .nav-links{position:fixed;top:60px;left:0;right:0;background:rgba(18,18,30,0.98);flex-direction:column;padding:1rem;gap:0.3rem;display:none}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:0.7rem 1rem}
+  .hero h1{font-size:2.6rem}
+  .bagua-grid{grid-template-columns:repeat(2,1fr)}
+  .hex-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
+  .modal{padding:1.5rem;margin:0.5rem}
+  .casting-step{gap:1rem}
+}
+@media(max-width:480px){
+  .hero h1{font-size:2rem}
+  .hero{padding:2rem 0}
+  .section-header h2{font-size:1.7rem}
+  .hex-grid{grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:0.5rem}
+}
 </style>
 </head>
 <body>
+
+<!-- Nav -->
 <nav>
-<ul>
-<li><a href="#" class="active" data-section="home">首页</a></li>
-<li><a href="#" data-section="basics">基础概念</a></li>
+<div class="nav-inner">
+<a href="#" class="nav-logo" onclick="switchSection('home');return false">学易</a>
+<button class="hamburger" id="hamburger" aria-label="菜单">
+<span></span><span></span><span></span>
+</button>
+<ul class="nav-links" id="navLinks">
+<li><a href="#" data-section="home" class="active">首页</a></li>
+<li><a href="#" data-section="basics">基础</a></li>
 <li><a href="#" data-section="bagua">八卦</a></li>
 <li><a href="#" data-section="hexagrams">六十四卦</a></li>
 <li><a href="#" data-section="casting">占卜</a></li>
 <li><a href="#" data-section="about">关于</a></li>
 </ul>
+<button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button>
+</div>
 </nav>
 
+<!-- Home -->
 <section id="home" class="active">
-<div class="container">
-<h1>周 易 入 门</h1>
-<div class="yin-yang-symbol">
-<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#2c2c2c" stroke="#c9a959" stroke-width="2"/><path d="M50,2 A48,48 0 0,1 50,98 A24,24 0 0,1 50,50 A24,24 0 0,0 50,2" fill="#f5f0e8"/><circle cx="50" cy="26" r="6" fill="#2c2c2c"/><circle cx="50" cy="74" r="6" fill="#f5f0e8"/></svg>
-</div>
-<p style="text-align:center;font-size:1.1rem;color:var(--text-light);">「易者，变易也，穷则变，变则通，通则久。」<br>—— 《周易·系辞》</p>
-<div style="text-align:center;margin-top:2rem;">
+<div class="container hero">
+<svg class="taiji" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="var(--bg-card)" stroke="var(--gold)" stroke-width="2"/><path d="M50,2 A48,48 0 0,1 50,98 A24,24 0 0,1 50,50 A24,24 0 0,0 50,2" fill="var(--accent)"/><circle cx="50" cy="26" r="6" fill="var(--bg-card)"/><circle cx="50" cy="74" r="6" fill="var(--accent)"/></svg>
+<h1>周 易</h1>
+<p class="subtitle">穷则变，变则通，通则久。<br>—— 走进变化的世界，领悟先贤的智慧。</p>
 <button class="btn" onclick="switchSection('basics')">开始学习</button>
 </div>
-</div>
 </section>
 
+<!-- Basics -->
 <section id="basics">
 <div class="container">
-<h2>阴阳之道</h2>
-<p>阴阳是周易最核心的哲学概念。世间万物皆有阴阳两面：<strong>阳</strong>代表积极、光明、刚强、动、上、外；<strong>阴</strong>代表消极、黑暗、柔弱、静、下、内。二者既对立又统一，相互转化，此消彼长。</p>
-<div class="concept-grid">
-<div class="concept-card"><h4>☀️ 阳的特性</h4><ul style="list-style:none;padding-left:0;"><li>· 明亮、温暖、向上</li><li>· 刚健、运动、开放</li><li>· 天、男、日、火</li></ul></div>
-<div class="concept-card"><h4>🌙 阴的特性</h4><ul style="list-style:none;padding-left:0;"><li>· 暗淡、寒冷、向下</li><li>· 柔顺、安静、闭合</li><li>· 地、女、月、水</li></ul></div>
+<div class="section-header"><h2>阴阳之道</h2><p>周易最核心的哲学概念</p></div>
+<p>阴阳是周易最核心的哲学概念。世间万物皆有阴阳两面——<strong>阳</strong>代表积极、光明、刚强；<strong>阴</strong>代表消极、黑暗、柔顺。二者既对立又统一，相互转化，此消彼长。</p>
+<div class="card-grid card-grid-2">
+<div class="card"><h4>☀️ 阳</h4><ul style="list-style:none;padding-left:0"><li style="margin-bottom:0.3rem">· 明亮、温暖、向上</li><li style="margin-bottom:0.3rem">· 刚健、运动、开放</li><li>· 天、男、日、火</li></ul></div>
+<div class="card"><h4>🌙 阴</h4><ul style="list-style:none;padding-left:0"><li style="margin-bottom:0.3rem">· 暗淡、寒冷、向下</li><li style="margin-bottom:0.3rem">· 柔顺、安静、闭合</li><li>· 地、女、月、水</li></ul></div>
 </div>
-<h2>五行学说</h2>
-<p>五行是古代中国人对世界基本物质及其运动规律的认识，包括<strong>木、火、土、金、水</strong>五种元素。五行之间存在相生相克的关系：</p>
-<div class="concept-grid">
-<div class="concept-card"><h4>相生</h4><p>木生火 → 火生土 → 土生金 → 金生水 → 水生木</p></div>
-<div class="concept-card"><h4>相克</h4><p>木克土 → 土克水 → 水克火 → 火克金 → 金克木</p></div>
+
+<div class="section-header" style="margin-top:3rem"><h2>五行学说</h2><p>木火土金水，相生相克</p></div>
+<div class="card-grid card-grid-2">
+<div class="card"><h4>相生</h4><p>木生火 → 火生土 → 土生金 → 金生水 → 水生木</p></div>
+<div class="card"><h4>相克</h4><p>木克土 → 土克水 → 水克火 → 火克金 → 金克木</p></div>
 </div>
-<h2>基本符号</h2>
-<div class="concept-grid">
-<div class="concept-card" style="text-align:center;"><h4>阳爻</h4><div style="font-family:monospace;font-size:2.5rem;margin:1rem 0;letter-spacing:0.2em;">—</div><p>连续不断，代表阳、刚健、积极</p></div>
-<div class="concept-card" style="text-align:center;"><h4>阴爻</h4><div style="font-family:monospace;font-size:2.5rem;margin:1rem 0;letter-spacing:0.2em;">&ndash;</div><p>中间断开，代表阴、柔顺、消极</p></div>
+
+<div class="section-header" style="margin-top:3rem"><h2>基本符号：爻</h2><p>构成卦象的基本单位</p></div>
+<div class="card-grid card-grid-2">
+<div class="card" style="text-align:center"><h4>阳爻 —</h4><div style="font-size:2.5rem;letter-spacing:0.2em;margin:0.8rem 0;font-family:monospace">—</div><p>连续不断，代表阳、刚健、积极</p></div>
+<div class="card" style="text-align:center"><h4>阴爻 - -</h4><div style="font-size:2.5rem;margin:0.8rem 0;font-family:monospace">--</div><p>中间断开，代表阴、柔顺、消极</p></div>
+</div>
+
+<div class="section-header" style="margin-top:3rem"><h2>八卦歌诀</h2></div>
+<div class="rhyme-box">
+<p><strong>乾三连</strong> ☰ ☰ ☰　　<strong>坤六断</strong> ☷ ☷ ☷</p>
+<p><strong>震仰盂</strong> ☳ ☳ ☳　　<strong>艮覆碗</strong> ☶ ☶ ☶</p>
+<p><strong>离中虚</strong> ☲ ☲ ☲　　<strong>坎中满</strong> ☵ ☵ ☵</p>
+<p><strong>兑上缺</strong> ☱ ☱ ☱　　<strong>巽下断</strong> ☴ ☴ ☴</p>
 </div>
 </div>
 </section>
 
+<!-- Bagua -->
 <section id="bagua">
 <div class="container">
-<h2>八卦</h2>
-<p>八卦是周易的基础符号，由三个阴阳爻组成。八个卦象各有其象征意义：</p>
-<div class="bagua-grid">
-<div class="bagua-card" onclick="showBaguaDetail('乾','☰','天，健也。君子以自强不息。')"><div class="symbol">☰</div><div class="name">乾</div><div class="meaning">天 · 父</div></div>
-<div class="bagua-card" onclick="showBaguaDetail('坤','☷','地，顺也。君子以厚德载物。')"><div class="symbol">☷</div><div class="name">坤</div><div class="meaning">地 · 母</div></div>
-<div class="bagua-card" onclick="showBaguaDetail('震','☳','雷，震也。君子以恐惧修省。')"><div class="symbol">☳</div><div class="name">震</div><div class="meaning">雷 · 长男</div></div>
-<div class="bagua-card" onclick="showBaguaDetail('巽','☴','风，入也。君子以申命行事。')"><div class="symbol">☴</div><div class="name">巽</div><div class="meaning">风 · 长女</div></div>
-<div class="bagua-card" onclick="showBaguaDetail('坎','☵','水，陷也。君子以常德行，习教事。')"><div class="symbol">☵</div><div class="name">坎</div><div class="meaning">水 · 中男</div></div>
-<div class="bagua-card" onclick="showBaguaDetail('离','☲','火，丽也。君子以继明照于四方。')"><div class="symbol">☲</div><div class="name">离</div><div class="meaning">火 · 中女</div></div>
-<div class="bagua-card" onclick="showBaguaDetail('艮','☶','山，止也。君子以思不出其位。')"><div class="symbol">☶</div><div class="name">艮</div><div class="meaning">山 · 少男</div></div>
-<div class="bagua-card" onclick="showBaguaDetail('兑','☱','泽，说也。君子以朋友讲习。')"><div class="symbol">☱</div><div class="name">兑</div><div class="meaning">泽 · 少女</div></div>
-</div>
-<h3>八卦歌诀</h3>
-<div style="background:#fff;padding:1.5rem;border-radius:8px;border-left:3px solid var(--gold);">
-<p style="margin-bottom:0.5rem;"><strong>乾三连 ☰☰☰</strong>，<strong>坤六断 ☷☷☷</strong></p>
-<p style="margin-bottom:0.5rem;"><strong>震仰盂 ☳☳☳</strong>，<strong>艮覆碗 ☶☶☶</strong></p>
-<p style="margin-bottom:0.5rem;"><strong>离中虚 ☲☲☲</strong>，<strong>坎中满 ☵☵☵</strong></p>
-<p style="margin-bottom:0;"><strong>兑上缺 ☱☱☱</strong>，<strong>巽下断 ☴☴☴</strong></p>
-</div>
+<div class="section-header"><h2>八卦</h2><p>周易的基础符号，由三爻组成</p></div>
+<p style="margin-bottom:1.5rem">八卦是周易的基础符号，由三个阴阳爻组成。八个卦象各有其象征意义——点击查看详情：</p>
+<div class="bagua-grid" id="baguaGrid"></div>
 </div>
 </section>
 
+<!-- Hexagrams -->
 <section id="hexagrams">
 <div class="container">
-<h2>六十四卦</h2>
-<p>六十四卦由两个八卦重叠组成，是周易占卜的核心工具。点击任意卦象查看详情：</p>
-<div class="hexagram-grid" id="hexagramGrid"></div>
+<div class="section-header"><h2>六十四卦</h2><p>点击任意卦象查看完整解读</p></div>
+<div class="search-bar"><input type="text" id="hexSearch" placeholder="🔍 搜索卦名、卦序或关键词…" oninput="filterHexagrams(this.value)"></div>
+<div class="hex-grid" id="hexagramGrid"></div>
 </div>
 </section>
 
+<!-- Casting -->
 <section id="casting">
 <div class="container">
-<h2>硬币占卜法</h2>
-<p>这是最简便的起卦方法。用三枚硬币，摇六次即可得一卦。</p>
+<div class="section-header"><h2>硬币占卜</h2><p>三枚硬币，六次起卦</p></div>
+<p>这是最简便的起卦方法。用三枚硬币，摇六次即可得一卦。心中默念所问之事，然后开始：</p>
 <div class="casting-area">
-<h3>起卦步骤</h3>
-<ol style="text-align:left;max-width:400px;margin:0 auto 1.5rem;padding-left:1.5rem;">
-<li>心中默念所问之事</li>
-<li>将三枚硬币捧在手中摇动</li>
-<li>抛落后查看结果</li>
-<li>记录一次结果</li>
-<li>重复六次，从下往上记录</li>
-</ol>
-<h3>投掷结果换算</h3>
-<div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0;">
-<div><div class="coin yang">阳</div><p style="margin-top:0.5rem;">3正面=<strong>阳爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">老阳，变阴</span></p></div>
-<div><div class="coin yin">阴</div><p style="margin-top:0.5rem;">3背面=<strong>阴爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">老阴，变阳</span></p></div>
-<div><div style="width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid var(--accent);">正</div><p style="margin-top:0.5rem;">2正1背=<strong>阳爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">少阳，不变</span></p></div>
-<div><div style="width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid var(--accent);background:var(--accent);color:#fff;">背</div><p style="margin-top:0.5rem;">2背1正=<strong>阴爻</strong><br><span style="font-size:0.85rem;color:var(--text-light);">少阴，不变</span></p></div>
+<button class="btn" id="castBtn" onclick="castCoin()">🪙 摇一卦</button>
+<div id="castSteps" class="casting-step" style="display:none"></div>
+<div id="castResult" class="cast-result"></div>
 </div>
-<button class="btn" onclick="startCasting()">开始占卜（模拟）</button>
-<div class="casting-result" id="castingResult">
-<p style="margin-bottom:0.5rem;">您的卦象：</p>
-<div class="gua-lines" id="guaLines"></div>
-<p style="margin-top:1rem;" id="castingSummary"></p>
-<button class="btn" style="margin-top:1rem;" onclick="resetCasting()">重新起卦</button>
-</div>
-</div>
-<h3>变爻说明</h3>
-<div style="background:#fff;padding:1.5rem;border-radius:8px;border:1px solid var(--border);">
-<p>☯ <strong>老阳（9）</strong> → 阳爻变阴爻，代表事物达到极点</p>
-<p>☯ <strong>老阴（6）</strong> → 阴爻变阳爻，代表阴气盛极将转</p>
-<p>☯ <strong>少阳（7）</strong> → 阳爻不变，表示稳步发展</p>
-<p>☯ <strong>少阴（8）</strong> → 阴爻不变，表示稳步发展</p>
+
+<div class="section-header" style="margin-top:3rem"><h2>规则速查</h2></div>
+<div class="card-grid card-grid-2">
+<div class="card" style="text-align:center"><h4>3正面（老阳）</h4><div class="coin-icon old-yang" style="margin:0.5rem auto">阳</div><p>阳爻 <strong>—</strong>，<span style="color:var(--gold);font-weight:600">变爻</span> → 变为阴</p></div>
+<div class="card" style="text-align:center"><h4>3背面（老阴）</h4><div class="coin-icon old-yin" style="margin:0.5rem auto">阴</div><p>阴爻 <strong>- -</strong>，<span style="color:var(--gold);font-weight:600">变爻</span> → 变为阳</p></div>
+<div class="card" style="text-align:center"><h4>2正1背（少阳）</h4><div class="coin-icon yang" style="margin:0.5rem auto">正</div><p>阳爻 <strong>—</strong>，不变</p></div>
+<div class="card" style="text-align:center"><h4>2背1正（少阴）</h4><div class="coin-icon yin" style="margin:0.5rem auto">背</div><p>阴爻 <strong>- -</strong>，不变</p></div>
 </div>
 </div>
 </section>
 
+<!-- About -->
 <section id="about">
 <div class="container">
-<h2>关于周易</h2>
-<div class="about-content">
-<p><strong>《周易》</strong>，又称《易经》，是中国古代经典之一，相传由伏羲、周文王、周公旦等圣人创作。它以阴阳符号为基础，通过八卦和六十四卦来阐述天地人三才的变化规律。</p>
-<h3>核心思想</h3>
-<ul style="padding-left:1.5rem;">
-<li><strong>变易</strong>：世间万物皆在变化之中</li>
-<li><strong>不易</strong>：变化背后有永恒的规律</li>
-<li><strong>简易</strong>：复杂现象可用简单符号表示</li>
-</ul>
-<h3>应用领域</h3>
-<p>周易思想深刻影响了中国文化的方方面面：<strong>中医</strong>、<strong>风水</strong>、<strong>武术</strong>、<strong>书法</strong>、<strong>诗词</strong>、<strong>音乐</strong>、<strong>建筑</strong>……乃至现代的<strong>管理学</strong>和<strong>计算机科学</strong>。</p>
-<h3>学习建议</h3>
-<p>学习周易宜由浅入深：先理解阴阳五行，再熟记八卦含义，然后研读六十四卦卦辞。推荐入门书籍：《周易本义》（朱熹）、《周易译注》（黄寿祺）。</p>
+<div class="section-header"><h2>关于周易</h2></div>
+<div class="about-card">
+<p><strong>《周易》</strong>又称《易经》，是中国传统思想文化中自然哲学与人文实践的理论根源，被誉为"群经之首，大道之源"。其内容主要包括<strong>经</strong>（六十四卦卦爻辞）和<strong>传</strong>（十翼）两部分。</p>
+<p>相传伏羲画八卦，文王演为六十四卦并作卦辞，周公作爻辞，孔子作十翼。虽经历代学者考证，成书过程众说纷纭，但其对中国哲学、医学、天文、军事、艺术等领域的深远影响不言而喻。</p>
+<p>易有三义：<strong>变易</strong>（变化不息）、<strong>简易</strong>（大道至简）、<strong>不易</strong>（恒常之理）。学易不在于算命，而在于明理——知变、应变、适变。</p>
+</div>
+<div style="margin-top:2rem;text-align:center;color:var(--text-light);font-size:0.85rem">
+<p>敬天 · 爱人 · 知变 · 守常</p>
 </div>
 </div>
 </section>
 
-<footer><p>周易入门学习 · 仅供文化参考 · 理性看待</p></footer>
-
-<div class="modal-overlay" id="modalOverlay">
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
 <div class="modal">
-<button class="modal-close" onclick="closeModal()">×</button>
-<h2 id="modalTitle"></h2>
-<p id="modalSymbol" style="text-align:center;font-size:1.3rem;"></p>
-<div class="gua-display" id="modalGua"></div>
-<p id="modalContent"></p>
+<button class="modal-close" onclick="closeModal()">✕</button>
+<div id="modalContent"></div>
 </div>
 </div>
+
+<!-- Footer -->
+<footer>
+<p>学易 · 知变 · 守常</p>
+<p style="margin-top:0.3rem">穷则变，变则通，通则久</p>
+</footer>
 
 <script>
-const hexagrams=[
-{n:1,g:'䷀',name:'乾',meaning:'天行健，君子以自强不息。',desc:'纯阳之卦，代表天、刚健、第一。'},
-{n:2,g:'䷁',name:'坤',meaning:'地势坤，君子以厚德载物。',desc:'纯阴之卦，代表地、柔顺、第二。'},
-{n:3,g:'䷂',name:'屯',meaning:'云雷屯，君子以经纶。',desc:'水雷叠临，象征万物初生之艰难。'},
-{n:4,g:'䷃',name:'蒙',meaning:'山下出泉，蒙。君子以果行育德。',desc:'山水蒙，象征蒙昧幼稚，需启蒙教育。'},
-{n:5,g:'䷄',name:'需',meaning:'云上于天，需。君子以饮食宴乐。',desc:'水天需，象征等待时机。'},
-{n:6,g:'䷅',name:'讼',meaning:'天与水违行，讼。君子以作事谋始。',desc:'天水讼，象征争论、诉讼。'},
-{n:7,g:'䷆',name:'师',meaning:'地中有水，师。君子以容民畜众。',desc:'地水师，象征军队、众。'},
-{n:8,g:'䷇',name:'比',meaning:'地上有水，比。先王以建万国，亲诸侯。',desc:'水地比，象征亲附、团结。'},
-{n:9,g:'䷈',name:'小畜',meaning:'风行天上，小畜。君子以懿文德。',desc:'风天小畜，象征小有积蓄。'},
-{n:10,g:'䷉',name:'履',meaning:'上天下泽，履。君子以辨上下，定民志。',desc:'天泽履，象征谨慎行事。'},
-{n:11,g:'䷊',name:'泰',meaning:'天地交，泰。后以财成天地之道。',desc:'地天泰，象征通泰、平安。'},
-{n:12,g:'䷋',name:'否',meaning:'天地不交，否。君子以俭德辟难。',desc:'天地否，象征闭塞、困境。'},
-{n:13,g:'䷌',name:'同人',meaning:'天与火，同人。君子以类族辨物。',desc:'天火同人，象征志同道合。'},
-{n:14,g:'䷍',name:'大有',meaning:'火在天上，大有。君子以遏恶扬善。',desc:'火天大有，象征大获所有。'},
-{n:15,g:'䷎',name:'谦',meaning:'地中有山，谦。君子以裒多益寡。',desc:'地山谦，象征谦虚。'},
-{n:16,g:'䷏',name:'豫',meaning:'雷出地奋，豫。先王以作乐崇德。',desc:'雷地豫，象征喜悦。'},
-{n:17,g:'䷐',name:'随',meaning:'泽中有雷，随。君子以向晦入宴息。',desc:'泽雷随，象征随从、随和。'},
-{n:18,g:'䷑',name:'蛊',meaning:'山下有风，蛊。君子以振民育德。',desc:'山风蛊，象征除弊治乱。'},
-{n:19,g:'䷒',name:'临',meaning:'泽上有地，临。君子以教思无穷。',desc:'泽地临，象征临近、督导。'},
-{n:20,g:'䷓',name:'观',meaning:'风行地上，观。先王以省方观民设教。',desc:'风地观，象征观察、观摩。'},
-{n:21,g:'䷔',name:'噬嗑',meaning:'雷电噬嗑。先王以明罚敕法。',desc:'火雷噬嗑，象征刑法治世。'},
-{n:22,g:'䷕',name:'贲',meaning:'山下有火，贲。君子以明庶政。',desc:'山火贲，象征文饰。'},
-{n:23,g:'䷖',name:'剥',meaning:'山附于地，剥。上以厚下安宅。',desc:'山地剥，象征侵蚀、衰落。'},
-{n:24,g:'䷗',name:'复',meaning:'雷在地中，复。先王以至日闭关。',desc:'地雷复，象征复归、复兴。'},
-{n:25,g:'䷘',name:'无妄',meaning:'天下雷行，物与无妄。先王以茂对时。',desc:'天雷无妄，象征无妄、真实。'},
-{n:26,g:'䷙',name:'大畜',meaning:'天在山中，大畜。君子以多识前言往行。',desc:'山天大畜，象征大积蓄。'},
-{n:27,g:'䷚',name:'颐',meaning:'山下有雷，颐。君子以慎言语，节饮食。',desc:'山雷颐，象征颐养。'},
-{n:28,g:'䷛',name:'大过',meaning:'泽灭木，大过。君子以独立不惧。',desc:'泽风大过，象征大的过度。'},
-{n:29,g:'䷜',name:'坎',meaning:'水洊至，习坎。君子以常德行，习教事。',desc:'坎为水，象征险阻、重重困难。'},
-{n:30,g:'䷝',name:'离',meaning:'明两作，离。大人以继明照于四方。',desc:'离为火，象征光明、依附。'},
-{n:31,g:'䷞',name:'咸',meaning:'山上有泽，咸。君子以虚受人。',desc:'泽山咸，象征感应。'},
-{n:32,g:'䷟',name:'恒',meaning:'雷风恒。君子以立不易方。',desc:'雷风恒，象征恒久。'},
-{n:33,g:'䷠',name:'遁',meaning:'天下有山，遁。君子以远小人，不恶而严。',desc:'天山遁，象征退避、隐遁。'},
-{n:34,g:'䷡',name:'大壮',meaning:'雷在天上，大壮。君子以非礼勿履。',desc:'雷天大壮，象征壮大、强盛。'},
-{n:35,g:'䷢',name:'晋',meaning:'明出地上，晋。君子以自昭明德。',desc:'火地晋，象征晋升、前进。'},
-{n:36,g:'䷣',name:'明夷',meaning:'明入地中，明夷。君子以莅众，用晦而明。',desc:'地火明夷，象征受伤、晦暗。'},
-{n:37,g:'䷤',name:'家人',meaning:'风自火出，家人。君子以言有物而行有恒。',desc:'风火家人，象征家庭。'},
-{n:38,g:'䷥',name:'睽',meaning:'上火下泽，睽。君子以同而异。',desc:'火泽睽，象征乖离、对立。'},
-{n:39,g:'䷦',name:'蹇',meaning:'山上有水，蹇。君子以反身修德。',desc:'水山蹇，象征艰难、险阻。'},
-{n:40,g:'䷧',name:'解',meaning:'雷雨作，解。君子以赦过宥罪。',desc:'雷水解，象征解除、缓解。'},
-{n:41,g:'䷨',name:'损',meaning:'山下有泽，损。君子以惩忿窒欲。',desc:'山泽损，象征减损。'},
-{n:42,g:'䷩',name:'益',meaning:'风雷益。君子以见善则迁，有过则改。',desc:'风雷益，象征增益。'},
-{n:43,g:'䷪',name:'夬',meaning:'泽上于天，夬。君子以施禄及下。',desc:'泽天夬，象征决断。'},
-{n:44,g:'䷫',name:'姤',meaning:'天下有风，姤。后以施命诰四方。',desc:'天风姤，象征相遇。'},
-{n:45,g:'䷬',name:'萃',meaning:'泽上于地，萃。君子以除戎器，戒不虞。',desc:'泽地萃，象征聚集。'},
-{n:46,g:'䷭',name:'升',meaning:'地中生木，升。君子以顺德，积小以高大。',desc:'地风升，象征上升。'},
-{n:47,g:'䷮',name:'困',meaning:'泽无水，困。君子以致命遂志。',desc:'泽水困，象征困境。'},
-{n:48,g:'䷯',name:'井',meaning:'木上有水，井。君子以劳民劝相。',desc:'水风井，象征井养。'},
-{n:49,g:'䷰',name:'革',meaning:'泽中有火，革。君子以治历明时。',desc:'泽火革，象征变革。'},
-{n:50,g:'䷱',name:'鼎',meaning:'木上有火，鼎。君子以正位凝命。',desc:'火风鼎，象征重器、革新。'},
-{n:51,g:'䷲',name:'震',meaning:'洊雷，震。君子以恐惧修省。',desc:'震为雷，象征震动。'},
-{n:52,g:'䷳',name:'艮',meaning:'兼山，艮。君子以思不出其位。',desc:'艮为山，象征停止。'},
-{n:53,g:'䷴',name:'渐',meaning:'山上有木，渐。君子以居贤德，善俗。',desc:'风山渐，象征渐进。'},
-{n:54,g:'䷵',name:'归妹',meaning:'泽上有雷，归妹。君子以永终知敝。',desc:'雷泽归妹，象征归附。'},
-{n:55,g:'䷶',name:'丰',meaning:'雷电皆至，丰。君子以折狱致刑。',desc:'雷火丰，象征丰盛。'},
-{n:56,g:'䷷',name:'旅',meaning:'山上有火，旅。君子以明慎用刑。',desc:'火山旅，象征旅行。'},
-{n:57,g:'䷸',name:'巽',meaning:'随风，巽。君子以申命行事。',desc:'巽为风，象征顺从。'},
-{n:58,g:'䷹',name:'兑',meaning:'丽泽，兑。君子以朋友讲习。',desc:'兑为泽，象征喜悦。'},
-{n:59,g:'䷺',name:'涣',meaning:'风行水上，涣。先王以享于帝立庙。',desc:'风水涣，象征涣散。'},
-{n:60,g:'䷻',name:'节',meaning:'泽上有水，节。君子以制数度，议德行。',desc:'水泽节，象征节制。'},
-{n:61,g:'䷼',name:'中孚',meaning:'泽上有风，中孚。君子以议狱缓死。',desc:'风泽中孚，象征诚信。'},
-{n:62,g:'䷽',name:'小过',meaning:'山上有雷，小过。君子以行过乎恭，丧过乎哀。',desc:'雷山小过，象征小有过失。'},
-{n:63,g:'䷾',name:'既济',meaning:'水在火上，既济。君子以思患而豫防之。',desc:'水火既济，象征成功。'},
-{n:64,g:'䷿',name:'未济',meaning:'火在水上，未济。君子以慎辨物居方。',desc:'火水未济，象征未完成。'}
+// ==================== DATA ====================
+
+const BAGUA = [
+  {id:'乾',sym:'☰',n1:'天',n2:'父',desc:'天行健，君子以自强不息。'},
+  {id:'坤',sym:'☷',n1:'地',n2:'母',desc:'地势坤，君子以厚德载物。'},
+  {id:'震',sym:'☳',n1:'雷',n2:'长男',desc:'洊雷，震。君子以恐惧修省。'},
+  {id:'巽',sym:'☴',n1:'风',n2:'长女',desc:'随风，巽。君子以申命行事。'},
+  {id:'坎',sym:'☵',n1:'水',n2:'中男',desc:'水洊至，习坎。君子以常德行，习教事。'},
+  {id:'离',sym:'☲',n1:'火',n2:'中女',desc:'明两作，离。君子以继明照于四方。'},
+  {id:'艮',sym:'☶',n1:'山',n2:'少男',desc:'兼山，艮。君子以思不出其位。'},
+  {id:'兑',sym:'☱',n1:'泽',n2:'少女',desc:'丽泽，兑。君子以朋友讲习。'}
 ];
 
-function switchSection(id){
-document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
-document.querySelectorAll('nav a').forEach(a=>a.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-document.querySelector('nav a[data-section="'+id+'"]').classList.add('active');
-window.scrollTo(0,0);
+const HEXAGRAMS = [
+{n:1,g:'䷀',name:'乾',up:'乾',lo:'乾',lines:'111111',guaci:'乾：元亨利贞。',xiangyue:'天行健，君子以自强不息。',yao:[
+  '初九：潜龙勿用。','九二：见龙在田，利见大人。','九三：君子终日乾乾，夕惕若，厉无咎。','九四：或跃在渊，无咎。','九五：飞龙在天，利见大人。','上九：亢龙有悔。']},
+{n:2,g:'䷁',name:'坤',up:'坤',lo:'坤',lines:'000000',guaci:'坤：元亨，利牝马之贞。君子有攸往，先迷后得主，利。西南得朋，东北丧朋。安贞吉。',xiangyue:'地势坤，君子以厚德载物。',yao:[
+  '初六：履霜，坚冰至。','六二：直方大，不习无不利。','六三：含章可贞。或从王事，无成有终。','六四：括囊，无咎无誉。','六五：黄裳，元吉。','上六：龙战于野，其血玄黄。']},
+{n:3,g:'䷂',name:'屯',up:'坎',lo:'震',lines:'100010',guaci:'屯：元亨利贞。勿用有攸往。利建侯。',xiangyue:'云雷，屯。君子以经纶。',yao:[
+  '初九：磐桓，利居贞，利建侯。','六二：屯如邅如，乘马班如，匪寇婚媾。女子贞不字，十年乃字。','六三：即鹿无虞，惟入于林中。君子几不如舍。往吝。','六四：乘马班如，求婚媾。往吉，无不利。','九五：屯其膏。小贞吉，大贞凶。','上六：乘马班如，泣血涟如。']},
+{n:4,g:'䷃',name:'蒙',up:'艮',lo:'坎',lines:'010001',guaci:'蒙：亨。匪我求童蒙，童蒙求我。初筮告，再三渎，渎则不告。利贞。',xiangyue:'山下出泉，蒙。君子以果行育德。',yao:[
+  '初六：发蒙，利用刑人，用说桎梏。以往吝。','九二：包蒙，吉。纳妇，吉。子克家。','六三：勿用取女，见金夫，不有躬。无攸利。','六四：困蒙，吝。','六五：童蒙，吉。','上九：击蒙，不利为寇，利御寇。']},
+{n:5,g:'䷄',name:'需',up:'坎',lo:'乾',lines:'111010',guaci:'需：有孚，光亨，贞吉。利涉大川。',xiangyue:'云上于天，需。君子以饮食宴乐。',yao:[
+  '初九：需于郊，利用恒，无咎。','九二：需于沙，小有言，终吉。','九三：需于泥，致寇至。','六四：需于血，出自穴。','九五：需于酒食，贞吉。','上六：入于穴，有不速之客三人来，敬之终吉。']},
+{n:6,g:'䷅',name:'讼',up:'乾',lo:'坎',lines:'010111',guaci:'讼：有孚窒惕，中吉，终凶。利见大人，不利涉大川。',xiangyue:'天与水违行，讼。君子以作事谋始。',yao:[
+  '初六：不永所事，小有言，终吉。','九二：不克讼，归而逋，其邑人三百户，无眚。','六三：食旧德，贞厉，终吉。或从王事，无成。','九四：不克讼，复即命，渝。安贞吉。','九五：讼，元吉。','上九：或锡之鞶带，终朝三褫之。']},
+{n:7,g:'䷆',name:'师',up:'坤',lo:'坎',lines:'010000',guaci:'师：贞，丈人吉，无咎。',xiangyue:'地中有水，师。君子以容民畜众。',yao:[
+  '初六：师出以律，否臧凶。','九二：在师中，吉无咎。王三锡命。','六三：师或舆尸，凶。','六四：师左次，无咎。','六五：田有禽，利执言，无咎。长子帅师，弟子舆尸，贞凶。','上六：大君有命，开国承家，小人勿用。']},
+{n:8,g:'䷇',name:'比',up:'坎',lo:'坤',lines:'000010',guaci:'比：吉。原筮，元永贞，无咎。不宁方来，后夫凶。',xiangyue:'地上有水，比。先王以建万国，亲诸侯。',yao:[
+  '初六：有孚比之，无咎。有孚盈缶，终来有他吉。','六二：比之自内，贞吉。','六三：比之匪人。','六四：外比之，贞吉。','九五：显比，王用三驱，失前禽。邑人不诫，吉。','上六：比之无首，凶。']},
+{n:9,g:'䷈',name:'小畜',up:'巽',lo:'乾',lines:'111011',guaci:'小畜：亨。密云不雨，自我西郊。',xiangyue:'风行天上，小畜。君子以懿文德。',yao:[
+  '初九：复自道，何其咎？吉。','九二：牵复，吉。','九三：舆说辐，夫妻反目。','六四：有孚，血去惕出，无咎。','九五：有孚挛如，富以其邻。','上九：既雨既处，尚德载。妇贞厉。月几望，君子征凶。']},
+{n:10,g:'䷉',name:'履',up:'乾',lo:'兑',lines:'110111',guaci:'履虎尾，不咥人，亨。',xiangyue:'上天下泽，履。君子以辨上下，定民志。',yao:[
+  '初九：素履，往无咎。','九二：履道坦坦，幽人贞吉。','六三：眇能视，跛能履。履虎尾，咥人，凶。武人为于大君。','九四：履虎尾，愬愬，终吉。','九五：夬履，贞厉。','上九：视履考祥，其旋元吉。']},
+{n:11,g:'䷊',name:'泰',up:'坤',lo:'乾',lines:'111000',guaci:'泰：小往大来，吉亨。',xiangyue:'天地交，泰。后以财成天地之道，辅相天地之宜，以左右民。',yao:[
+  '初九：拔茅茹，以其汇。征吉。','九二：包荒，用冯河，不遐遗。朋亡，得尚于中行。','九三：无平不陂，无往不复。艰贞无咎。勿恤其孚，于食有福。','六四：翩翩，不富以其邻，不戒以孚。','六五：帝乙归妹，以祉，元吉。','上六：城复于隍，勿用师。自邑告命，贞吝。']},
+{n:12,g:'䷋',name:'否',up:'乾',lo:'坤',lines:'000111',guaci:'否之匪人，不利君子贞，大往小来。',xiangyue:'天地不交，否。君子以俭德辟难，不可荣以禄。',yao:[
+  '初六：拔茅茹，以其汇。贞吉亨。','六二：包承，小人吉，大人否亨。','六三：包羞。','九四：有命无咎，畴离祉。','九五：休否，大人吉。其亡其亡，系于苞桑。','上九：倾否，先否后喜。']},
+{n:13,g:'䷌',name:'同人',up:'乾',lo:'离',lines:'101111',guaci:'同人于野，亨。利涉大川，利君子贞。',xiangyue:'天与火，同人。君子以类族辨物。',yao:[
+  '初九：同人于门，无咎。','六二：同人于宗，吝。','九三：伏戎于莽，升其高陵，三岁不兴。','九四：乘其墉，弗克攻，吉。','九五：同人先号咷而后笑，大师克相遇。','上九：同人于郊，无悔。']},
+{n:14,g:'䷍',name:'大有',up:'离',lo:'乾',lines:'111101',guaci:'大有：元亨。',xiangyue:'火在天上，大有。君子以遏恶扬善，顺天休命。',yao:[
+  '初九：无交害，匪咎。艰则无咎。','九二：大车以载，有攸往，无咎。','九三：公用亨于天子，小人弗克。','九四：匪其彭，无咎。','六五：厥孚交如，威如，吉。','上九：自天佑之，吉无不利。']},
+{n:15,g:'䷎',name:'谦',up:'坤',lo:'艮',lines:'001000',guaci:'谦：亨。君子有终。',xiangyue:'地中有山，谦。君子以裒多益寡，称物平施。',yao:[
+  '初六：谦谦君子，用涉大川，吉。','六二：鸣谦，贞吉。','九三：劳谦君子，有终吉。','六四：无不利，撝谦。','六五：不富以其邻，利用侵伐，无不利。','上六：鸣谦，利用行师，征邑国。']},
+{n:16,g:'䷏',name:'豫',up:'震',lo:'坤',lines:'000100',guaci:'豫：利建侯行师。',xiangyue:'雷出地奋，豫。先王以作乐崇德，殷荐之上帝，以配祖考。',yao:[
+  '初六：鸣豫，凶。','六二：介于石，不终日，贞吉。','六三：盱豫，悔；迟有悔。','九四：由豫，大有得。勿疑，朋盍簪。','六五：贞疾，恒不死。','上六：冥豫，成有渝，无咎。']},
+{n:17,g:'䷐',name:'随',up:'兑',lo:'震',lines:'100110',guaci:'随：元亨利贞，无咎。',xiangyue:'泽中有雷，随。君子以向晦入宴息。',yao:[
+  '初九：官有渝，贞吉。出门交有功。','六二：系小子，失丈夫。','六三：系丈夫，失小子。随有求得，利居贞。','九四：随有获，贞凶。有孚在道，以明，何咎？','九五：孚于嘉，吉。','上六：拘系之，乃从维之，王用亨于西山。']},
+{n:18,g:'䷑',name:'蛊',up:'艮',lo:'巽',lines:'011001',guaci:'蛊：元亨。利涉大川。先甲三日，后甲三日。',xiangyue:'山下有风，蛊。君子以振民育德。',yao:[
+  '初六：干父之蛊，有子，考无咎。厉，终吉。','九二：干母之蛊，不可贞。','九三：干父之蛊，小有悔，无大咎。','六四：裕父之蛊，往见吝。','六五：干父之蛊，用誉。','上九：不事王侯，高尚其事。']},
+{n:19,g:'䷒',name:'临',up:'坤',lo:'兑',lines:'110000',guaci:'临：元亨利贞。至于八月有凶。',xiangyue:'泽上有地，临。君子以教思无穷，容保民无疆。',yao:[
+  '初九：咸临，贞吉。','九二：咸临，吉无不利。','六三：甘临，无攸利。既忧之，无咎。','六四：至临，无咎。','六五：知临，大君之宜，吉。','上六：敦临，吉无咎。']},
+{n:20,g:'䷓',name:'观',up:'巽',lo:'坤',lines:'000011',guaci:'观：盥而不荐，有孚颙若。',xiangyue:'风行地上，观。先王以省方观民设教。',yao:[
+  '初六：童观，小人无咎，君子吝。','六二：窥观，利女贞。','六三：观我生，进退。','六四：观国之光，利用宾于王。','九五：观我生，君子无咎。','上九：观其生，君子无咎。']},
+{n:21,g:'䷔',name:'噬嗑',up:'离',lo:'震',lines:'100101',guaci:'噬嗑：亨。利用狱。',xiangyue:'雷电，噬嗑。先王以明罚敕法。',yao:[
+  '初九：屦校灭趾，无咎。','六二：噬肤灭鼻，无咎。','六三：噬腊肉，遇毒。小吝，无咎。','九四：噬干胏，得金矢。利艰贞，吉。','六五：噬干肉，得黄金。贞厉，无咎。','上九：何校灭耳，凶。']},
+{n:22,g:'䷕',name:'贲',up:'艮',lo:'离',lines:'101001',guaci:'贲：亨。小利有攸往。',xiangyue:'山下有火，贲。君子以明庶政，无敢折狱。',yao:[
+  '初九：贲其趾，舍车而徒。','六二：贲其须。','九三：贲如濡如，永贞吉。','六四：贲如皤如，白马翰如。匪寇婚媾。','六五：贲于丘园，束帛戋戋，吝，终吉。','上九：白贲，无咎。']},
+{n:23,g:'䷖',name:'剥',up:'艮',lo:'坤',lines:'000001',guaci:'剥：不利有攸往。',xiangyue:'山附于地，剥。上以厚下安宅。',yao:[
+  '初六：剥床以足，蔑贞凶。','六二：剥床以辨，蔑贞凶。','六三：剥之无咎。','六四：剥床以肤，凶。','六五：贯鱼以宫人宠，无不利。','上九：硕果不食，君子得舆，小人剥庐。']},
+{n:24,g:'䷗',name:'复',up:'坤',lo:'震',lines:'100000',guaci:'复：亨。出入无疾。朋来无咎。反复其道，七日来复。利有攸往。',xiangyue:'雷在地中，复。先王以至日闭关，商旅不行，后不省方。',yao:[
+  '初九：不远复，无祗悔，元吉。','六二：休复之吉。','六三：频复，厉，无咎。','六四：中行独复。','六五：敦复，无悔。','上六：迷复，凶，有灾眚。用行师，终有大败。']},
+{n:25,g:'䷘',name:'无妄',up:'乾',lo:'震',lines:'100111',guaci:'无妄：元亨利贞。其匪正有眚，不利有攸往。',xiangyue:'天下雷行，物与无妄。先王以茂对时育万物。',yao:[
+  '初九：无妄往，吉。','六二：不耕获，不菑畬，则利有攸往。','六三：无妄之灾，或系之牛，行人之得，邑人之灾。','九四：可贞，无咎。','九五：无妄之疾，勿药有喜。','上九：无妄行，有眚，无攸利。']},
+{n:26,g:'䷙',name:'大畜',up:'艮',lo:'乾',lines:'111001',guaci:'大畜：利贞。不家食吉。利涉大川。',xiangyue:'天在山中，大畜。君子以多识前言往行，以畜其德。',yao:[
+  '初九：有厉，利已。','九二：舆说輹。','九三：良马逐，利艰贞。曰闲舆卫，利有攸往。','六四：童牛之牿，元吉。','六五：豮豕之牙，吉。','上九：何天之衢，亨。']},
+{n:27,g:'䷚',name:'颐',up:'艮',lo:'震',lines:'100001',guaci:'颐：贞吉。观颐，自求口实。',xiangyue:'山下有雷，颐。君子以慎言语，节饮食。',yao:[
+  '初九：舍尔灵龟，观我朵颐，凶。','六二：颠颐，拂经于丘颐，征凶。','六三：拂颐，贞凶。十年勿用，无攸利。','六四：颠颐，吉。虎视眈眈，其欲逐逐，无咎。','六五：拂经，居贞吉。不可涉大川。','上九：由颐，厉吉。利涉大川。']},
+{n:28,g:'䷛',name:'大过',up:'兑',lo:'巽',lines:'011110',guaci:'大过：栋桡。利有攸往，亨。',xiangyue:'泽灭木，大过。君子以独立不惧，遁世无闷。',yao:[
+  '初六：藉用白茅，无咎。','九二：枯杨生稊，老夫得其女妻，无不利。','九三：栋桡，凶。','九四：栋隆，吉。有它吝。','九五：枯杨生华，老妇得其士夫，无咎无誉。','上六：过涉灭顶，凶，无咎。']},
+{n:29,g:'䷜',name:'坎',up:'坎',lo:'坎',lines:'010010',guaci:'习坎：有孚维心亨。行有尚。',xiangyue:'水洊至，习坎。君子以常德行，习教事。',yao:[
+  '初六：习坎，入于坎窞，凶。','九二：坎有险，求小得。','六三：来之坎坎，险且枕。入于坎窞，勿用。','六四：樽酒簋贰，用缶，纳约自牖，终无咎。','九五：坎不盈，祗既平，无咎。','上六：系用徽纆，寘于丛棘，三岁不得，凶。']},
+{n:30,g:'䷝',name:'离',up:'离',lo:'离',lines:'101101',guaci:'离：利贞，亨。畜牝牛吉。',xiangyue:'明两作，离。大人以继明照于四方。',yao:[
+  '初九：履错然，敬之无咎。','六二：黄离，元吉。','九三：日昃之离，不鼓缶而歌，则大耋之嗟，凶。','九四：突如其来如，焚如，死如，弃如。','六五：出涕沱若，戚嗟若，吉。','上九：王用出征，有嘉折首，获匪其丑，无咎。']},
+{n:31,g:'䷞',name:'咸',up:'兑',lo:'艮',lines:'001110',guaci:'咸：亨，利贞。取女吉。',xiangyue:'山上有泽，咸。君子以虚受人。',yao:[
+  '初六：咸其拇。','六二：咸其腓，凶，居吉。','九三：咸其股，执其随，往吝。','九四：贞吉，悔亡。憧憧往来，朋从尔思。','九五：咸其脢，无悔。','上六：咸其辅颊舌。']},
+{n:32,g:'䷟',name:'恒',up:'震',lo:'巽',lines:'011100',guaci:'恒：亨，无咎，利贞。利有攸往。',xiangyue:'雷风，恒。君子以立不易方。',yao:[
+  '初六：浚恒，贞凶，无攸利。','九二：悔亡。','九三：不恒其德，或承之羞，贞吝。','九四：田无禽。','六五：恒其德，贞。妇人吉，夫子凶。','上六：振恒，凶。']},
+{n:33,g:'䷠',name:'遁',up:'乾',lo:'艮',lines:'001111',guaci:'遁：亨，小利贞。',xiangyue:'天下有山，遁。君子以远小人，不恶而严。',yao:[
+  '初六：遁尾，厉，勿用有攸往。','六二：执之用黄牛之革，莫之胜说。','九三：系遁，有疾厉。畜臣妾吉。','九四：好遁，君子吉，小人否。','九五：嘉遁，贞吉。','上九：肥遁，无不利。']},
+{n:34,g:'䷡',name:'大壮',up:'震',lo:'乾',lines:'111100',guaci:'大壮：利贞。',xiangyue:'雷在天上，大壮。君子以非礼勿履。',yao:[
+  '初九：壮于趾，征凶，有孚。','九二：贞吉。','九三：小人用壮，君子用罔。贞厉。羝羊触藩，羸其角。','九四：贞吉，悔亡。藩决不羸，壮于大舆之輹。','六五：丧羊于易，无悔。','上六：羝羊触藩，不能退，不能遂，无攸利。艰则吉。']},
+{n:35,g:'䷢',name:'晋',up:'离',lo:'坤',lines:'000101',guaci:'晋：康侯用锡马蕃庶，昼日三接。',xiangyue:'明出地上，晋。君子以自昭明德。',yao:[
+  '初六：晋如摧如，贞吉。罔孚裕无咎。','六二：晋如愁如，贞吉。受兹介福，于其王母。','六三：众允，悔亡。','九四：晋如鼫鼠，贞厉。','六五：悔亡，失得勿恤。往吉，无不利。','上九：晋其角，维用伐邑。厉吉无咎，贞吝。']},
+{n:36,g:'䷣',name:'明夷',up:'坤',lo:'离',lines:'101000',guaci:'明夷：利艰贞。',xiangyue:'明入地中，明夷。君子以莅众，用晦而明。',yao:[
+  '初九：明夷于飞，垂其翼。君子于行，三日不食。有攸往，主人有言。','六二：明夷，夷于左股，用拯马壮，吉。','九三：明夷于南狩，得其大首。不可疾贞。','六四：入于左腹，获明夷之心，于出门庭。','六五：箕子之明夷，利贞。','上六：不明晦。初登于天，后入于地。']},
+{n:37,g:'䷤',name:'家人',up:'巽',lo:'离',lines:'101011',guaci:'家人：利女贞。',xiangyue:'风自火出，家人。君子以言有物而行有恒。',yao:[
+  '初九：闲有家，悔亡。','六二：无攸遂，在中馈，贞吉。','九三：家人嗃嗃，悔厉吉。妇子嘻嘻，终吝。','六四：富家，大吉。','九五：王假有家，勿恤，吉。','上九：有孚威如，终吉。']},
+{n:38,g:'䷥',name:'睽',up:'离',lo:'兑',lines:'110101',guaci:'睽：小事吉。',xiangyue:'上火下泽，睽。君子以同而异。',yao:[
+  '初九：悔亡。丧马勿逐自复。见恶人无咎。','九二：遇主于巷，无咎。','六三：见舆曳，其牛掣。其人天且劓，无初有终。','九四：睽孤，遇元夫，交孚，厉无咎。','六五：悔亡，厥宗噬肤，往何咎。','上九：睽孤，见豕负涂，载鬼一车。先张之弧，后说之弧。匪寇婚媾。往遇雨则吉。']},
+{n:39,g:'䷦',name:'蹇',up:'坎',lo:'艮',lines:'001010',guaci:'蹇：利西南，不利东北。利见大人，贞吉。',xiangyue:'山上有水，蹇。君子以反身修德。',yao:[
+  '初六：往蹇来誉。','六二：王臣蹇蹇，匪躬之故。','九三：往蹇来反。','六四：往蹇来连。','九五：大蹇朋来。','上六：往蹇来硕，吉。利见大人。']},
+{n:40,g:'䷧',name:'解',up:'震',lo:'坎',lines:'010100',guaci:'解：利西南。无所往，其来复吉。有攸往，夙吉。',xiangyue:'雷雨作，解。君子以赦过宥罪。',yao:[
+  '初六：无咎。','九二：田获三狐，得黄矢，贞吉。','六三：负且乘，致寇至，贞吝。','九四：解而拇，朋至斯孚。','六五：君子维有解，吉。有孚于小人。','上六：公用射隼于高墉之上，获之，无不利。']},
+{n:41,g:'䷨',name:'损',up:'艮',lo:'兑',lines:'110001',guaci:'损：有孚，元吉，无咎，可贞，利有攸往。曷之用？二簋可用享。',xiangyue:'山下有泽，损。君子以惩忿窒欲。',yao:[
+  '初九：已事遄往，无咎。酌损之。','九二：利贞，征凶。弗损益之。','六三：三人行，则损一人；一人行，则得其友。','六四：损其疾，使遄有喜，无咎。','六五：或益之十朋之龟，弗克违，元吉。','上九：弗损益之，无咎。贞吉，利有攸往。得臣无家。']},
+{n:42,g:'䷩',name:'益',up:'巽',lo:'震',lines:'100011',guaci:'益：利有攸往，利涉大川。',xiangyue:'风雷，益。君子以见善则迁，有过则改。',yao:[
+  '初九：利用为大作，元吉，无咎。','六二：或益之十朋之龟，弗克违，永贞吉。王用享于帝，吉。','六三：益之用凶事，无咎。有孚中行，告公用圭。','六四：中行告公从，利用为依迁国。','九五：有孚惠心，勿问元吉。有孚惠我德。','上九：莫益之，或击之，立心勿恒，凶。']},
+{n:43,g:'䷪',name:'夬',up:'兑',lo:'乾',lines:'111110',guaci:'夬：扬于王庭，孚号有厉。告自邑，不利即戎。利有攸往。',xiangyue:'泽上于天，夬。君子以施禄及下，居德则忌。',yao:[
+  '初九：壮于前趾，往不胜为咎。','九二：惕号，莫夜有戎，勿恤。','九三：壮于頄，有凶。君子夬夬独行，遇雨若濡，有愠无咎。','九四：臀无肤，其行次且。牵羊悔亡，闻言不信。','九五：苋陆夬夬中行，无咎。','上六：无号，终有凶。']},
+{n:44,g:'䷫',name:'姤',up:'乾',lo:'巽',lines:'011111',guaci:'姤：女壮，勿用取女。',xiangyue:'天下有风，姤。后以施命诰四方。',yao:[
+  '初六：系于金柅，贞吉。有攸往，见凶。羸豕孚蹢躅。','九二：包有鱼，无咎，不利宾。','九三：臀无肤，其行次且，厉，无大咎。','九四：包无鱼，起凶。','九五：以杞包瓜，含章，有陨自天。','上九：姤其角，吝，无咎。']},
+{n:45,g:'䷬',name:'萃',up:'兑',lo:'坤',lines:'000110',guaci:'萃：亨。王假有庙。利见大人，亨，利贞。用大牲吉。利有攸往。',xiangyue:'泽上于地，萃。君子以除戎器，戒不虞。',yao:[
+  '初六：有孚不终，乃乱乃萃。若号，一握为笑。勿恤，往无咎。','六二：引吉，无咎。孚乃利用禴。','六三：萃如嗟如，无攸利。往无咎，小吝。','九四：大吉，无咎。','九五：萃有位，无咎。匪孚，元永贞，悔亡。','上六：赍咨涕洟，无咎。']},
+{n:46,g:'䷭',name:'升',up:'坤',lo:'巽',lines:'011000',guaci:'升：元亨。用见大人，勿恤。南征吉。',xiangyue:'地中生木，升。君子以顺德，积小以高大。',yao:[
+  '初六：允升，大吉。','九二：孚乃利用禴，无咎。','九三：升虚邑。','六四：王用亨于岐山，吉，无咎。','六五：贞吉，升阶。','上六：冥升，利于不息之贞。']},
+{n:47,g:'䷮',name:'困',up:'兑',lo:'坎',lines:'010110',guaci:'困：亨，贞。大人吉，无咎。有言不信。',xiangyue:'泽无水，困。君子以致命遂志。',yao:[
+  '初六：臀困于株木，入于幽谷，三岁不觌。','九二：困于酒食，朱绂方来，利用享祀。征凶，无咎。','六三：困于石，据于蒺藜，入于其宫，不见其妻，凶。','九四：来徐徐，困于金车，吝，有终。','九五：劓刖，困于赤绂。乃徐有说，利用祭祀。','上六：困于葛藟，于臲卼。曰动悔有悔，征吉。']},
+{n:48,g:'䷯',name:'井',up:'坎',lo:'巽',lines:'011010',guaci:'井：改邑不改井，无丧无得。往来井井。汔至亦未繘井，羸其瓶，凶。',xiangyue:'木上有水，井。君子以劳民劝相。',yao:[
+  '初六：井泥不食，旧井无禽。','九二：井谷射鲋，瓮敝漏。','九三：井渫不食，为我心恻。可用汲，王明并受其福。','六四：井甃，无咎。','九五：井洌，寒泉食。','上六：井收勿幕，有孚元吉。']},
+{n:49,g:'䷰',name:'革',up:'兑',lo:'离',lines:'101110',guaci:'革：已日乃孚。元亨利贞，悔亡。',xiangyue:'泽中有火，革。君子以治历明时。',yao:[
+  '初九：巩用黄牛之革。','六二：已日乃革之，征吉，无咎。','九三：征凶，贞厉。革言三就，有孚。','九四：悔亡。有孚改命，吉。','九五：大人虎变，未占有孚。','上六：君子豹变，小人革面。征凶，居贞吉。']},
+{n:50,g:'䷱',name:'鼎',up:'离',lo:'巽',lines:'011101',guaci:'鼎：元吉，亨。',xiangyue:'木上有火，鼎。君子以正位凝命。',yao:[
+  '初六：鼎颠趾，利出否。得妾以其子，无咎。','九二：鼎有实，我仇有疾，不我能即，吉。','九三：鼎耳革，其行塞。雉膏不食，方雨亏悔，终吉。','九四：鼎折足，覆公餗，其形渥，凶。','六五：鼎黄耳金铉，利贞。','上九：鼎玉铉，大吉，无不利。']},
+{n:51,g:'䷲',name:'震',up:'震',lo:'震',lines:'100100',guaci:'震：亨。震来虩虩，笑言哑哑，震惊百里，不丧匕鬯。',xiangyue:'洊雷，震。君子以恐惧修省。',yao:[
+  '初九：震来虩虩，后笑言哑哑，吉。','六二：震来厉，亿丧贝。跻于九陵，勿逐，七日得。','六三：震苏苏，震行无眚。','九四：震遂泥。','六五：震往来厉，亿无丧，有事。','上六：震索索，视矍矍，征凶。震不于其躬，于其邻，无咎。婚媾有言。']},
+{n:52,g:'䷳',name:'艮',up:'艮',lo:'艮',lines:'001001',guaci:'艮其背，不获其身。行其庭，不见其人。无咎。',xiangyue:'兼山，艮。君子以思不出其位。',yao:[
+  '初六：艮其趾，无咎，利永贞。','六二：艮其腓，不拯其随，其心不快。','九三：艮其限，列其夤，厉薰心。','六四：艮其身，无咎。','六五：艮其辅，言有序，悔亡。','上九：敦艮，吉。']},
+{n:53,g:'䷴',name:'渐',up:'巽',lo:'艮',lines:'001011',guaci:'渐：女归吉，利贞。',xiangyue:'山上有木，渐。君子以居贤德善俗。',yao:[
+  '初六：鸿渐于干。小子厉，有言，无咎。','六二：鸿渐于磐，饮食衎衎，吉。','九三：鸿渐于陆。夫征不复，妇孕不育，凶。利御寇。','六四：鸿渐于木。或得其桷，无咎。','九五：鸿渐于陵。妇三岁不孕，终莫之胜，吉。','上九：鸿渐于逵。其羽可用为仪，吉。']},
+{n:54,g:'䷵',name:'归妹',up:'震',lo:'兑',lines:'110100',guaci:'归妹：征凶，无攸利。',xiangyue:'泽上有雷，归妹。君子以永终知敝。',yao:[
+  '初九：归妹以娣，跛能履，征吉。','九二：眇能视，利幽人之贞。','六三：归妹以须，反归以娣。','九四：归妹愆期，迟归有时。','六五：帝乙归妹，其君之袂不如其娣之袂良。月几望，吉。','上六：女承筐无实，士刲羊无血，无攸利。']},
+{n:55,g:'䷶',name:'丰',up:'震',lo:'离',lines:'101100',guaci:'丰：亨。王假之，勿忧，宜日中。',xiangyue:'雷电皆至，丰。君子以折狱致刑。',yao:[
+  '初九：遇其配主，虽旬无咎，往有尚。','六二：丰其蔀，日中见斗。往得疑疾。有孚发若，吉。','九三：丰其沛，日中见沬。折其右肱，无咎。','九四：丰其蔀，日中见斗。遇其夷主，吉。','六五：来章，有庆誉，吉。','上六：丰其屋，蔀其家，窥其户，阒其无人，三岁不觌，凶。']},
+{n:56,g:'䷷',name:'旅',up:'离',lo:'艮',lines:'001101',guaci:'旅：小亨。旅贞吉。',xiangyue:'山上有火，旅。君子以明慎用刑而不留狱。',yao:[
+  '初六：旅琐琐，斯其所取灾。','六二：旅即次，怀其资，得童仆贞。','九三：旅焚其次，丧其童仆，贞厉。','九四：旅于处，得其资斧，我心不快。','六五：射雉一矢亡，终以誉命。','上九：鸟焚其巢，旅人先笑后号咷。丧牛于易，凶。']},
+{n:57,g:'䷸',name:'巽',up:'巽',lo:'巽',lines:'011011',guaci:'巽：小亨。利有攸往，利见大人。',xiangyue:'随风，巽。君子以申命行事。',yao:[
+  '初六：进退，利武人之贞。','九二：巽在床下，用史巫纷若，吉，无咎。','九三：频巽，吝。','六四：悔亡，田获三品。','九五：贞吉，悔亡，无不利。无初有终。先庚三日，后庚三日，吉。','上九：巽在床下，丧其资斧，贞凶。']},
+{n:58,g:'䷹',name:'兑',up:'兑',lo:'兑',lines:'110110',guaci:'兑：亨，利贞。',xiangyue:'丽泽，兑。君子以朋友讲习。',yao:[
+  '初九：和兑，吉。','九二：孚兑，吉，悔亡。','六三：来兑，凶。','九四：商兑未宁，介疾有喜。','九五：孚于剥，有厉。','上六：引兑。']},
+{n:59,g:'䷺',name:'涣',up:'巽',lo:'坎',lines:'010011',guaci:'涣：亨。王假有庙。利涉大川，利贞。',xiangyue:'风行水上，涣。先王以享于帝立庙。',yao:[
+  '初六：用拯马壮，吉。','九二：涣奔其机，悔亡。','六三：涣其躬，无悔。','六四：涣其群，元吉。涣有丘，匪夷所思。','九五：涣汗其大号。涣王居，无咎。','上九：涣其血，去逖出，无咎。']},
+{n:60,g:'䷻',name:'节',up:'坎',lo:'兑',lines:'110010',guaci:'节：亨。苦节不可贞。',xiangyue:'泽上有水，节。君子以制数度，议德行。',yao:[
+  '初九：不出户庭，无咎。','九二：不出门庭，凶。','六三：不节若，则嗟若，无咎。','六四：安节，亨。','九五：甘节，吉，往有尚。','上六：苦节，贞凶，悔亡。']},
+{n:61,g:'䷼',name:'中孚',up:'巽',lo:'兑',lines:'110011',guaci:'中孚：豚鱼吉。利涉大川，利贞。',xiangyue:'泽上有风，中孚。君子以议狱缓死。',yao:[
+  '初九：虞吉，有它不燕。','九二：鸣鹤在阴，其子和之。我有好爵，吾与尔靡之。','六三：得敌，或鼓或罢，或泣或歌。','六四：月几望，马匹亡，无咎。','九五：有孚挛如，无咎。','上九：翰音登于天，贞凶。']},
+{n:62,g:'䷽',name:'小过',up:'震',lo:'艮',lines:'001100',guaci:'小过：亨，利贞。可小事，不可大事。飞鸟遗之音，不宜上，宜下，大吉。',xiangyue:'山上有雷，小过。君子以行过乎恭，丧过乎哀，用过乎俭。',yao:[
+  '初六：飞鸟以凶。','六二：过其祖，遇其妣。不及其君，遇其臣。无咎。','九三：弗过防之，从或戕之，凶。','九四：无咎，弗过遇之。往厉必戒，勿用永贞。','六五：密云不雨，自我西郊。公弋取彼在穴。','上六：弗遇过之，飞鸟离之，凶，是谓灾眚。']},
+{n:63,g:'䷾',name:'既济',up:'坎',lo:'离',lines:'101010',guaci:'既济：亨小，利贞。初吉终乱。',xiangyue:'水在火上，既济。君子以思患而豫防之。',yao:[
+  '初九：曳其轮，濡其尾，无咎。','六二：妇丧其茀，勿逐，七日得。','九三：高宗伐鬼方，三年克之，小人勿用。','六四：繻有衣袽，终日戒。','九五：东邻杀牛，不如西邻之禴祭，实受其福。','上六：濡其首，厉。']},
+{n:64,g:'䷿',name:'未济',up:'离',lo:'坎',lines:'010101',guaci:'未济：亨。小狐汔济，濡其尾，无攸利。',xiangyue:'火在水上，未济。君子以慎辨物居方。',yao:[
+  '初六：濡其尾，吝。','九二：曳其轮，贞吉。','六三：未济，征凶。利涉大川。','九四：贞吉，悔亡。震用伐鬼方，三年有赏于大国。','六五：贞吉，无悔。君子之光，有孚吉。','上九：有孚于饮酒，无咎。濡其首，有孚失是。']}
+];
+
+// Build lookup: pattern → hexagram
+const PATTERN_MAP = {};
+HEXAGRAMS.forEach(h => { PATTERN_MAP[h.lines] = h; });
+
+// ==================== NAVIGATION ====================
+
+function switchSection(id) {
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const link = document.querySelector(`nav a[data-section="${id}"]`);
+  if (link) link.classList.add('active');
+  document.getElementById('navLinks').classList.remove('open');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-document.querySelectorAll('nav a').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();switchSection(a.dataset.section)})});
 
-function showBaguaDetail(name,symbol,meaning){
-document.getElementById('modalTitle').textContent=name+'卦';
-document.getElementById('modalSymbol').textContent=symbol+' — '+name;
-document.getElementById('modalGua').textContent=symbol+' '+symbol+' '+symbol;
-document.getElementById('modalContent').textContent=meaning;
-document.getElementById('modalOverlay').classList.add('active');
-}
-
-function closeModal(){document.getElementById('modalOverlay').classList.remove('active');}
-document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))closeModal()});
-
-function renderHexagrams(){
-const grid=document.getElementById('hexagramGrid');
-grid.innerHTML='';
-hexagrams.forEach(h=>{
-const item=document.createElement('div');
-item.className='hexagram-item';
-item.innerHTML='<div class="num">第'+h.n+'卦</div><div class="name">'+h.name+'</div><div class="gua">'+h.g+'</div>';
-item.onclick=()=>showHexagramDetail(h);
-grid.appendChild(item);
+document.querySelectorAll('nav a[data-section]').forEach(a => {
+  a.addEventListener('click', e => { e.preventDefault(); switchSection(a.dataset.section); });
 });
+
+// Hamburger
+document.getElementById('hamburger').addEventListener('click', () => {
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+// ==================== THEME ====================
+
+const themeToggle = document.getElementById('themeToggle');
+const savedTheme = localStorage.getItem('zhouyi-theme') || 'light';
+if (savedTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeToggle.textContent = '☀️';
+}
+themeToggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('zhouyi-theme', 'light');
+    themeToggle.textContent = '🌙';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('zhouyi-theme', 'dark');
+    themeToggle.textContent = '☀️';
+  }
+});
+
+// ==================== BAGUA ====================
+
+function renderBagua() {
+  const grid = document.getElementById('baguaGrid');
+  BAGUA.forEach(b => {
+    const card = document.createElement('div');
+    card.className = 'bagua-card';
+    card.innerHTML = `<span class="symbol">${b.sym}</span><div class="name">${b.id}</div><div class="meaning">${b.n1} · ${b.n2}</div>`;
+    card.onclick = () => showBaguaDetail(b);
+    grid.appendChild(card);
+  });
 }
 
-function showHexagramDetail(h){
-document.getElementById('modalTitle').textContent='第'+h.n+'卦 '+h.name;
-document.getElementById('modalSymbol').textContent=h.g;
-document.getElementById('modalGua').textContent=h.g+' '+h.g;
-document.getElementById('modalContent').innerHTML='<p style="margin-bottom:1rem;"><strong>卦辞：</strong>'+h.meaning+'</p><p><strong>解读：</strong>'+h.desc+'</p>';
-
-document.getElementById('modalOverlay').classList.add('active');
+function showBaguaDetail(b) {
+  const mc = document.getElementById('modalContent');
+  mc.innerHTML = `
+    <h2>${b.id}卦</h2>
+    <div class="gua-big">${b.sym} ${b.sym} ${b.sym}</div>
+    <div class="trigram-info">${b.n1} · ${b.n2}</div>
+    <div class="modal-body"><p style="margin-bottom:1rem"><strong>象征：</strong>${b.n1}，为${b.n2}</p><p>${b.desc}</p></div>`;
+  document.getElementById('modalOverlay').classList.add('active');
 }
 
-function startCasting(){
-const result=document.getElementById('castingResult');
-const lines=document.getElementById('guaLines');
-const summary=document.getElementById('castingSummary');
-result.classList.add('active');
-const yao=['��س','��س','��س','��س','��س','��س'];
-let html='';
-let changeCount=0;
-for(let i=0;i<6;i++){
-const rand=Math.random();
-let type,yang,line;
-if(rand<0.125){type='����';yang=true;line='��';changeCount++;}
-else if(rand<0.25){type='����';yang=false;line='--';changeCount++;}
-else if(rand<0.625){type='����';yang=true;line='��';}
-else{type='����';yang=false;line='--';}
-html+='<div>'+yao[i]+'��'+line+' '+type+'</div>';
-}
-lines.innerHTML=html;
-summary.innerHTML='��'+changeCount+'����س������ı��ԣ�����Ĳ��֣���֮�ԣ��仯��س����Խ����';
+// ==================== HEXAGRAMS ====================
+
+function renderHexagrams(filter) {
+  const grid = document.getElementById('hexagramGrid');
+  grid.innerHTML = '';
+  HEXAGRAMS.forEach(h => {
+    if (filter && !h.name.includes(filter) && !String(h.n).includes(filter) && !h.guaci.includes(filter)) return;
+    const item = document.createElement('div');
+    item.className = 'hex-item';
+    item.innerHTML = `<div class="num">第${h.n}卦</div><div class="gname">${h.name}</div><div class="gsym">${h.g} ${h.up}${h.lo}</div>`;
+    item.onclick = () => showHexagramDetail(h);
+    grid.appendChild(item);
+  });
 }
 
-function resetCasting(){
-document.getElementById('castingResult').classList.remove('active');
+function filterHexagrams(val) {
+  renderHexagrams(val.trim());
 }
 
+function showHexagramDetail(h) {
+  let yaoHtml = '';
+  h.yao.forEach((y, i) => {
+    const isYang = h.lines[i] === '1';
+    yaoHtml += `<div class="yao-item"><span class="yao-label">${isYang ? '—' : '- -'} ${y.split('：')[0]}</span>${y.split('：')[1] || y}</div>`;
+  });
+
+  const mc = document.getElementById('modalContent');
+  mc.innerHTML = `
+    <h2>第${h.n}卦 · ${h.name}</h2>
+    <div class="gua-big">${h.g}</div>
+    <div class="trigram-info">${h.up}上${h.lo}下 ／ ${h.up}为外卦，${h.lo}为内卦</div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchModalTab(this,'guaci')">卦辞</button>
+      <button class="modal-tab" onclick="switchModalTab(this,'xiang')">象曰</button>
+      <button class="modal-tab" onclick="switchModalTab(this,'yao')">爻辞</button>
+    </div>
+    <div class="modal-body" id="tabContent">
+      <div id="tab-guaci" class="tab-panel"><p><strong>卦辞：</strong>${h.guaci}</p></div>
+      <div id="tab-xiang" class="tab-panel" style="display:none"><p><strong>象曰：</strong>${h.xiangyue}</p></div>
+      <div id="tab-yao" class="tab-panel" style="display:none">${yaoHtml}</div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function switchModalTab(btn, tab) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
+  const el = document.getElementById('tab-' + tab);
+  if (el) el.style.display = 'block';
+}
+
+function showHexagramByNum(n) {
+  const h = HEXAGRAMS.find(x => x.n === n);
+  if (h) showHexagramDetail(h);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay')) closeModal();
+});
+
+// ==================== CASTING ====================
+
+let castingState = null;
+
+function castCoin() {
+  // Generate 6 lines
+  const lines = [];
+  let changeCount = 0;
+  for (let i = 0; i < 6; i++) {
+    const r = Math.random();
+    let type, value, yaoSymbol;
+    if (r < 0.125) { // 3 heads = 老阳
+      type = 'old-yang'; value = '1'; yaoSymbol = '—';
+      changeCount++;
+    } else if (r < 0.25) { // 3 tails = 老阴
+      type = 'old-yin'; value = '0'; yaoSymbol = '- -';
+      changeCount++;
+    } else if (r < 0.625) { // 2 heads 1 tail = 少阳
+      type = 'yang'; value = '1'; yaoSymbol = '—';
+    } else { // 2 tails 1 head = 少阴
+      type = 'yin'; value = '0'; yaoSymbol = '- -';
+    }
+    lines.push({ type, value, yaoSymbol, label: ['初','二','三','四','五','上'][i] });
+  }
+
+  // Build pattern strings
+  const originalPattern = lines.map(l => l.value).join('');
+  const changedPattern = lines.map(l => l.type === 'old-yang' ? '0' : l.type === 'old-yin' ? '1' : l.value).join('');
+
+  const originalHex = PATTERN_MAP[originalPattern];
+  const changedHex = PATTERN_MAP[changedPattern];
+
+  // Display steps
+  const stepsEl = document.getElementById('castSteps');
+  stepsEl.style.display = 'flex';
+  stepsEl.innerHTML = lines.map((l, i) =>
+    `<div class="${l.type}" style="text-align:center;min-width:50px">
+      <div style="font-size:0.65rem;color:var(--text-light);margin-bottom:0.3rem">${l.label}</div>
+      <div style="font-size:1.8rem;line-height:1">${l.yaoSymbol}</div>
+      <div style="font-size:0.6rem;margin-top:0.2rem;padding:0.1rem 0.3rem;border-radius:3px;background:${l.type.includes('old') ? 'var(--gold)' : 'var(--border)'};color:${l.type.includes('old') ? '#fff' : 'var(--text-light)'}">
+        ${l.type === 'old-yang' ? '老阳变' : l.type === 'old-yin' ? '老阴变' : l.type === 'yang' ? '少阳' : '少阴'}
+      </div>
+    </div>`
+  ).join('');
+
+  const resultEl = document.getElementById('castResult');
+  resultEl.className = 'cast-result active';
+
+  let changeHtml = '';
+  if (changeCount > 0) {
+    changeHtml = `
+      <div class="cast-identify"><h4>⚡ 变卦：${changedHex ? changedHex.name + '（第' + changedHex.n + '卦）' : '未知'}</h4>
+      <p style="font-size:0.85rem;color:var(--text-light)">有 <strong>${changeCount}</strong> 个变爻，${changedHex ? changedHex.g : ''} ${changedHex ? changedHex.guaci : ''}</p>
+      <button class="btn btn-sm btn-outline" style="margin-top:0.5rem" onclick="showHexagramByNum(${changedHex.n})">查看变卦详情</button></div>`;
+  }
+
+  resultEl.innerHTML = `
+    <div class="cast-result-inner">
+      <div class="cast-identify"><h4>☯ 本卦：${originalHex ? originalHex.name + '（第' + originalHex.n + '卦）' : '未知'}</h4>
+      <p style="font-size:0.85rem;color:var(--text-light)">${originalHex ? originalHex.g + ' ' + originalHex.guaci : ''}</p>
+      <button class="btn btn-sm" style="margin-top:0.5rem" onclick='showHexagramByNum(${originalHex.n})'>查看本卦详解</button></div>
+      ${changeHtml}
+      <p style="text-align:center;margin-top:1rem;font-size:0.8rem;color:var(--text-light)">占卜以明理，结果仅供参考</p>
+    </div>`;
+
+  // Disable button during "animation"
+  const btn = document.getElementById('castBtn');
+  btn.textContent = '🪙 再摇一卦';
+}
+
+// ==================== INIT ====================
+
+renderBagua();
 renderHexagrams();
+
+// Keyboard shortcut: Escape closes modal
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
 </script>
 </body>
 </html>
